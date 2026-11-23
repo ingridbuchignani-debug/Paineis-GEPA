@@ -412,7 +412,7 @@ function tabela_(nome, linhaCab, ultimaCol) {
 function getDados() {
   if (!acessoOk_()) throw new Error('Acesso não autorizado');
   var ss = SpreadsheetApp.getActive();
-  var ad = tabela_('Adultos', 4, 45);
+  var ad = tabela_('Adultos', 4, 46);
   ad.linhas = ad.linhas.filter(function (r) { return r[0] && r[1]; });
   var ev = tabela_('Eventos', 4, 7);
   ev.linhas = ev.linhas.filter(function (r) { return r[0] && r[4]; });
@@ -432,7 +432,7 @@ function getDados() {
   return JSON.stringify({
     atualizado: Utilities.formatDate(new Date(), 'America/Sao_Paulo', 'dd/MM/yyyy HH:mm'),
     planilha: ss.getUrl(),
-    adultos: ad, eventos: ev, paxtuSync: PropertiesService.getScriptProperties().getProperty('ULTIMA_SYNC') || '', atualizacao: estadoAtualizacao_(), paxtuNao: PropertiesService.getScriptProperties().getProperty('SYNC_NAO_ULTIMA') || '', secoes: (function () { try { return tabela_('Seções', 3, 6); } catch (e) { return { linhas: [] }; } })(), jovens: (function () { try { var c = tabela_('Jovens', 3, 12); c.linhas = c.linhas.filter(function (r) { return r[1]; }); c.sync = PropertiesService.getScriptProperties().getProperty('JOVENS_SYNC') || ''; return c; } catch (e) { return { linhas: [] }; } })(), calendario: (function () { try { var c = tabela_('Calendário', 4, 13); c.linhas = c.linhas.filter(function (r) { return r[0] && r[2]; }); return c; } catch (e) { return { linhas: [] }; } })(), acomp: ac, respostas: rf, certificados: (function () { try { return livroParaPainel_(); } catch (e) { return null; } })(), paxtuTs: Number(PropertiesService.getScriptProperties().getProperty('ULTIMA_SYNC_TS') || 0), manualPed: Number(PropertiesService.getScriptProperties().getProperty('MANUAL_TS') || 0), rotas: (function () { try { return rotasParaPainel_(); } catch (e) { return null; } })(), inativos: inat,
+    adultos: ad, eventos: ev, paxtuSync: PropertiesService.getScriptProperties().getProperty('ULTIMA_SYNC') || '', atualizacao: estadoAtualizacao_(), acordosSync: PropertiesService.getScriptProperties().getProperty('ACORDOS_SYNC') || '', paxtuNao: PropertiesService.getScriptProperties().getProperty('SYNC_NAO_ULTIMA') || '', secoes: (function () { try { return tabela_('Seções', 3, 6); } catch (e) { return { linhas: [] }; } })(), jovens: (function () { try { var c = tabela_('Jovens', 3, 12); c.linhas = c.linhas.filter(function (r) { return r[1]; }); c.sync = PropertiesService.getScriptProperties().getProperty('JOVENS_SYNC') || ''; return c; } catch (e) { return { linhas: [] }; } })(), calendario: (function () { try { var c = tabela_('Calendário', 4, 13); c.linhas = c.linhas.filter(function (r) { return r[0] && r[2]; }); return c; } catch (e) { return { linhas: [] }; } })(), acomp: ac, respostas: rf, certificados: (function () { try { return livroParaPainel_(); } catch (e) { return null; } })(), paxtuTs: Number(PropertiesService.getScriptProperties().getProperty('ULTIMA_SYNC_TS') || 0), manualPed: Number(PropertiesService.getScriptProperties().getProperty('MANUAL_TS') || 0), rotas: (function () { try { return rotasParaPainel_(); } catch (e) { return null; } })(), inativos: inat,
     termo: { resumo: resumo, pendentes: pend }
   });
 }
@@ -634,6 +634,7 @@ function atualizarDoPaxtu() {
   }
   sp.setProperty('ULTIMA_SYNC_TS', String(Date.now())); sp.setProperties({ SYNC_IDX: '0', SYNC_NAO: '[]', ULTIMA_SYNC: Utilities.formatDate(new Date(), 'America/Sao_Paulo', 'dd/MM/yyyy HH:mm'), SYNC_NAO_ULTIMA: naoAchados.join(', ') });
   apagarTriggers_('continuarSync_');
+  try { atualizarSituacaoAcordos_(); } catch (e) { console.log('atualizarSituacaoAcordos_: ' + e); }
 }
 
 function continuarSync_() { atualizarDoPaxtu(); }

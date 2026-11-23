@@ -8,5 +8,11 @@ var CONFIG = {
   PLANILHA_ID: '',                               // ID da planilha do painel (está no endereço dela)
   PASTA_PAINEL_ID: '',                           // pasta do Drive onde ficam a planilha, o formulário e o modelo de certificado
   FORM_COMPETENCIAS_URL: '',                     // link público do formulário (criado pelo menu, passo 5)
-  CERT_ANO_INICIO: 2027                          // antes deste ano os certificados saem em modo teste (só para quem administra)
+  CERT_ANO_INICIO: 2027,                         // antes deste ano os certificados saem em modo teste (só para quem administra)
+  /* Histórico do Paxtu no Drive (HistoricoPaxtu.gs) */
+  HIST_PASTA_ID: '',                             // pasta base do grupo: cria dentro dela "Chefia" e "Jovens"
+  HIST_PASTA_ADMIN_ID: '',                       // pasta administrativa: cria "Paxtu - Relatórios" (apólice do seguro)
+  HIST_SECOES: [                                 // opcional: pasta de cada seção no Drive, pelo trecho do nome no Paxtu
+    // [/lobinho|alcateia/i, 'ID da pasta da alcateia'],
+  ]
 };

@@ -14,6 +14,8 @@ Painel para o Diretor de Métodos Educativos e os APFs acompanharem a formação
 | **Anos de atividade** | Certificado automático de anos de boas atividades, contados da Promessa, enviado por e-mail antes da primeira atividade do mês |
 | **Calendário** | Eventos do grupo, distritais, regionais e nacionais, com decisão de participação |
 | **Transição de ramo** | Jovens perto da idade de passagem para o próximo ramo |
+| **Acordo de Trabalho Voluntário** | Situação do acordo de cada adulto (vigente, vence em até 60 dias, vencido, pendente ou sem acordo), com indicador, filtro e alertas |
+| **Histórico do Paxtu no Drive** | Toda semana guarda no Drive os certificados de atividades e cursos (por pessoa e por ano), os Acordos de Trabalho Voluntário assinados, o histórico de formação do grupo e a apólice do seguro |
 | **Acesso** | Só entra quem estiver liberado na aba Acessos, com e-mail @escoteiros.org.br |
 
 ## O que você precisa
@@ -37,7 +39,8 @@ Painel para o Diretor de Métodos Educativos e os APFs acompanharem a formação
    7. Criar a aba de especialidades
    8. Configurar certificados (veja abaixo)
    9. Instalar atualizações automáticas
-6. No Apps Script: **Implantar › Nova implantação › App da Web**, executar como "Eu" e acesso "Qualquer pessoa do domínio". O link gerado é o painel.
+6. Opcional, histórico do Paxtu no Drive: preencha `HIST_PASTA_ID`, `HIST_PASTA_ADMIN_ID` e, se quiser, `HIST_SECOES` no `Config.gs`, e rode `instalarHistoricoPaxtu` uma vez no editor (domingo de madrugada). A primeira rodada baixa tudo e pode levar algumas horas; as seguintes só baixam o que for novo.
+7. No Apps Script: **Implantar › Nova implantação › App da Web**, executar como "Eu" e acesso "Qualquer pessoa do domínio". O link gerado é o painel.
 
 ## Modelo de certificado
 
@@ -52,6 +55,7 @@ Antes do ano definido em `CERT_ANO_INICIO`, os certificados saem em modo teste e
 - Os dados dos adultos ficam na planilha do grupo, no Google do grupo. Nada vai para este repositório.
 - A senha do Paxtu nunca fica no código.
 - O registro de novos associados não faz parte do painel, por causa da LGPD.
+- O PDF do Acordo de Trabalho Voluntário traz o CPF. Deixe a pasta Chefia, criada pelo histórico do Paxtu, só com quem precisa.
 
 ## Limitações conhecidas
 
@@ -68,5 +72,6 @@ Antes do ano definido em `CERT_ANO_INICIO`, os certificados saem em modo teste e
 | `Rotas.gs` | Rotas de aprendizagem e formulário de autoavaliação |
 | `Certificados.gs` | Certificados e livro de controle |
 | `Estrelas.gs` | Anos de boas atividades e e-mails automáticos |
+| `HistoricoPaxtu.gs` | Histórico do Paxtu no Drive e situação dos Acordos de Trabalho Voluntário |
 | `Instalacao.gs` | Atalhos do menu para montar o painel |
 | `Painel.html` | Tela do painel |
