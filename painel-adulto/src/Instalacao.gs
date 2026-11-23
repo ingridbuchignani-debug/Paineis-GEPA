@@ -10,10 +10,10 @@ function montarAcessos() { montarAcessos_(); }
 /** Monta o catálogo das Rotas de aprendizagem e o formulário de autoavaliação. */
 function montarRotas() { montarAbaRotas(); montarFormularioRotas(); }
 
-/** Rotinas automáticas: adultos do Paxtu toda 2ª Feira de madrugada,
+/** Rotinas automáticas: adultos e jovens do Paxtu toda 2ª e 5ª Feira de madrugada,
     verificação diária dos certificados de anos de atividade e promessas aos domingos. */
 function instalarRotinasAdulto() {
-  instalarAtualizacaoSemanal_();
+  instalarAtualizacao2x_();
   instalarEstrelas();
   SpreadsheetApp.getUi().alert('Rotinas automáticas instaladas.');
 }

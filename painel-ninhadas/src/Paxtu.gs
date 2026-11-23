@@ -76,3 +76,20 @@ function pxPerfil_(jar, codigo, token) {
   var r = req_(jar, PAXTU + '/associado/perfil', { method: 'post', payload: { associate_code: codigo, _token: token } });
   return r.getContentText();
 }
+
+/* ===== Validade real do registro (relatório "Vigência do seguro" do Paxtu) ===== */
+function pxValidades_(jar, tk) {
+  var anoAtual = new Date().getFullYear(), mapa = {};
+  [anoAtual - 1, anoAtual].forEach(function (ano) {
+    var p = 'reportType=associados&filters=' + encodeURIComponent('Vigência do seguro') + '&status=S&profession=Todos&year%5B%5D=' + ano;
+    for (var m = 1; m <= 12; m++) p += '&month%5B%5D=' + m;
+    var r = req_(jar, PAXTU + '/relatorios/consulta', { method: 'post', payload: p, headers: { 'X-CSRF-TOKEN': tk, 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' } });
+    var j = {}; try { j = JSON.parse(r.getContentText()); } catch (e) { Logger.log('Relatório ' + ano + ': ' + r.getResponseCode()); return; }
+    (j.retorno || []).forEach(function (x) {
+      var reg = String(x.Registro || '').split('-')[0].replace(/\D/g, ''); if (!reg || !x.Data_Fim) return;
+      var f = x.Data_Fim.split('-'), d = new Date(+f[0], +f[1] - 1, +f[2], 12);
+      if (!mapa[reg] || d > mapa[reg].fim) mapa[reg] = { fim: d, ini: x.Data_Inicio };
+    });
+  });
+  return mapa;
+}

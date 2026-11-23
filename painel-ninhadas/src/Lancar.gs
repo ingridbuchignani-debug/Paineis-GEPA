@@ -54,19 +54,22 @@ function marcarSituacaoProg_(cod, codItem, situacao, motivo) {
 
 /* Botão "Lançar pendentes no Paxtu" da aba Progressão */
 function lancarPendentesPaxtu() {
-  var email = exigir_();
-  return trava_(function () {
-    var pend = linhas_('Progressão').filter(function (p) { return p['Situação no Paxtu'] === 'Falta lançar'; });
-    if (!pend.length) return 'Nada para lançar.';
-    var s = sessaoPx_(), ok = 0, erros = [];
-    pend.forEach(function (p) {
-      var cod = String(p['Registro escoteiro']), item = String(p['Código do item']), e = enviarItemPx_(s, cod, item);
-      if (e) { erros.push(p['Nome'] + ': ' + e); marcarSituacaoProg_(cod, item, 'Falta lançar', e); }
-      else { ok++; marcarSituacaoProg_(cod, item, 'Lançado', ''); }
-    });
-    registrarAcesso_(email, 'Lançou ' + ok + ' itens no Paxtu');
-    return ok + ' item(ns) lançado(s) no Paxtu.' + (erros.length ? ' Não foram: ' + erros.join(' | ') : '');
-  });
+  var email = exigir_(), ini = Date.now();
+  var pend = linhas_('Progressão').filter(function (p) { return p['Situação no Paxtu'] === 'Falta lançar'; });
+  if (!pend.length) return 'Nada para lançar.';
+  /* envia fora do bloqueio e para antes do limite de 6 minutos do Google; o que sobrar fica para o próximo clique */
+  var s = sessaoPx_(), ok = 0, erros = [], feitos = 0;
+  for (var k = 0; k < pend.length; k++) {
+    if (Date.now() - ini > 240000) break;
+    var p = pend[k], cod = String(p['Registro escoteiro']), item = String(p['Código do item']), e = enviarItemPx_(s, cod, item);
+    try { trava_(function () { marcarSituacaoProg_(cod, item, e ? 'Falta lançar' : 'Lançado', e || ''); }); } catch (x) {}
+    if (e) erros.push(p['Nome'] + ': ' + e); else ok++;
+    feitos++;
+  }
+  registrarAcesso_(email, 'Lançou ' + ok + ' itens no Paxtu');
+  var resto = pend.length - feitos;
+  return ok + ' item(ns) lançado(s) no Paxtu.' + (erros.length ? ' Não foram: ' + erros.join(' | ') : '') +
+    (resto ? ' Faltam ' + resto + ' item(ns): clique de novo para continuar.' : '');
 }
 
 function dataConquista_(perfil, cid) {
@@ -79,7 +82,8 @@ function dataConquista_(perfil, cid) {
 /* Registrar conquista (Acolhida, Paco, Tixa, Lipe, Nina, Caminho Lobinho) com data */
 function lancarConquista(cod, conquista, iso) {
   var email = exigir_();
-  return trava_(function () {
+  /* fala com o Paxtu sem bloqueio; só a gravação na planilha usa o bloqueio */
+  var r = (function () {
     var cid = CONQ_ID_[conquista]; if (!cid) throw new Error('Conquista inválida.');
     if (!/^\d{4}-\d{2}-\d{2}$/.test(String(iso))) throw new Error('Informe a data.');
     var id = idPaxtu_(cod), s = sessaoPx_();
@@ -94,6 +98,10 @@ function lancarConquista(cod, conquista, iso) {
       if (r.getResponseCode() >= 400) throw new Error('O Paxtu recusou a conquista (' + r.getResponseCode() + ').');
       if (!dataConquista_(pxPerfil_(s.jar, id, s.tk), cid)) throw new Error('Enviado, mas o Paxtu não confirmou. Confira no Paxtu.');
     }
+    return { dataJa: dataJa };
+  })();
+  var dataJa = r.dataJa;
+  return trava_(function () {
     var sh = aba_('Filhotes'), v = sh.getDataRange().getValues(), col = v[0].indexOf(conquista);
     for (var i = 1; i < v.length; i++) if (String(v[i][0]) === String(cod) && col >= 0) sh.getRange(i + 1, col + 1).setValue(dataDe_(dataJa || iso)).setNumberFormat('dd/MM/yyyy');
     registrarAcesso_(email, 'Conquista ' + conquista + ' ' + cod);

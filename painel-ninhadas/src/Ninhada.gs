@@ -6,7 +6,7 @@ var NINHADA_SECOES_ = CONFIG.SECOES_PAXTU;
 var NINHADA_SECAO_ID = NINHADA_SECOES_[Object.keys(NINHADA_SECOES_)[0]];
 
 var NINHADA_ABAS_ = {
-  'Filhotes': ['Registro escoteiro', 'Nome', 'Nº registro', 'Data de nascimento', 'Idade', 'Ano de ingresso', 'Validade do registro', 'Situação', 'Renovar 2027',
+  'Filhotes': ['Registro escoteiro', 'Nome', 'Nº registro', 'Data de nascimento', 'Idade', 'Ano de ingresso', 'Validade do registro', 'Situação', 'Renovar ' + (new Date().getFullYear() + 1),
     'Responsável 1', 'Parentesco 1', 'Contato 1', 'E-mail 1', 'Responsável 2', 'Parentesco 2', 'Contato 2', 'E-mail 2',
     'Acolhida', 'Paco', 'Tixa', 'Lipe', 'Nina', 'Caminho Lobinho', 'Atualizado em', 'Observações', 'Ninhada', 'ID Paxtu', 'Origem'],
   'Progressão': ['Registro escoteiro', 'Nome', 'Etapa', 'Bloco', 'Código do item', 'Item', 'Data', 'Observação da chefia', 'Situação no Paxtu'],
@@ -190,6 +190,9 @@ function atualizarNinhadaDoPaxtu() {
   var nomesPx = {}; linhasF.forEach(function (x) { nomesPx[String(x[1]).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim()] = 1; });
   manuais.forEach(function (x) { if (!nomesPx[String(x[1]).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim()]) linhasF.push(x); });
   limparEscrever_(shF, linhasF, 28);
+  /* cabeçalho da renovação acompanha o ano: Renovar (ano seguinte) */
+  var cabF = shF.getRange(1, 1, 1, shF.getLastColumn()).getValues()[0];
+  cabF.forEach(function (c, j) { if (/^Renovar/.test(c)) shF.getRange(1, j + 1).setValue('Renovar ' + (ano + 1)); });
   if (linhasF.length) { shF.getRange(2, 4, linhasF.length, 1).setNumberFormat('dd/MM/yyyy'); shF.getRange(2, 7, linhasF.length, 1).setNumberFormat('dd/MM/yyyy');
     shF.getRange(2, 18, linhasF.length, 7).setNumberFormat('dd/MM/yyyy'); }
   limparEscrever_(shP, linhasP, 9);

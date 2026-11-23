@@ -8,7 +8,8 @@ function salvarChamada(iso, atividade, lista) {
   /* 1) grava a chamada e os itens na planilha (rápido, com bloqueio) */
   var res = trava_(function () {
     var sh = aba_('Presença'), v = sh.getDataRange().getValues();
-    for (var i = v.length - 1; i >= 1; i--) if (iso_(v[i][0]) === iso) sh.deleteRow(i + 1);
+    /* substitui só a chamada desta atividade (mesma data e mesmo título); outra atividade no mesmo dia fica intacta */
+    for (var i = v.length - 1; i >= 1; i--) if (iso_(v[i][0]) === iso && String(v[i][1]) === String(atividade)) sh.deleteRow(i + 1);
     var d = dataDe_(iso);
     var linhas = lista.filter(function (x) { return x.estado; }).map(function (x) { return [d, atividade, x.cod, x.nome, x.estado, x.motivo || '', 'Não', Number(x.acomp) || 0]; });
     if (linhas.length) {
@@ -25,21 +26,25 @@ function salvarChamada(iso, atividade, lista) {
 
 function marcarItem(cod, nome, codItem, iso, obs) {
   var email = exigir_();
-  return trava_(function () {
+  /* 1) grava na planilha com bloqueio (rápido) */
+  var r = trava_(function () {
     var it = linhas_('Itens').filter(function (i) { return String(i['Código do item']) === String(codItem); })[0];
     if (!it) throw new Error('Item não encontrado.');
     var sh = aba_('Progressão'), v = sh.getDataRange().getValues();
     for (var i = 1; i < v.length; i++) if (String(v[i][0]) === String(cod) && String(v[i][4]) === String(codItem)) {
       sh.getRange(i + 1, 7, 1, 2).setValues([[iso ? dataDe_(iso) : v[i][6], obs !== undefined ? obs : v[i][7]]]);
-      return 'Item atualizado.';
+      return { msg: 'Item atualizado.' };
     }
     sh.appendRow([cod, nome, it['Etapa'], it['Bloco'], codItem, it['Item'], iso ? dataDe_(iso) : new Date(), obs || '', 'Falta lançar']);
     sh.getRange(sh.getLastRow(), 7).setNumberFormat('dd/MM/yyyy');
     registrarAcesso_(email, 'Progressão ' + nome);
-    var e; try { e = enviarItemPx_(sessaoPx_(), cod, codItem); } catch (err) { e = 'sem acesso ao Paxtu (' + (err.message || err) + ')'; }
-    marcarSituacaoProg_(cod, codItem, e ? 'Falta lançar' : 'Lançado', e);
-    return e ? 'Item marcado no painel, mas não foi para o Paxtu: ' + e : 'Item marcado e lançado no Paxtu.';
+    return { enviar: true };
   });
+  if (!r.enviar) return r.msg;
+  /* 2) manda ao Paxtu sem segurar o bloqueio */
+  var e; try { e = enviarItemPx_(sessaoPx_(), cod, codItem); } catch (err) { e = 'sem acesso ao Paxtu (' + (err.message || err) + ')'; }
+  try { trava_(function () { marcarSituacaoProg_(cod, codItem, e ? 'Falta lançar' : 'Lançado', e); }); } catch (x) {}
+  return e ? 'Item marcado no painel, mas não foi para o Paxtu: ' + e : 'Item marcado e lançado no Paxtu.';
 }
 function desmarcarItem(cod, codItem) {
   exigir_();
@@ -58,35 +63,46 @@ var CAMPOS_ATIV_ = { situacao: 'Situação', motivo: 'Motivo do cancelamento', t
 function salvarAtividade(linha, campo, valor) {
   exigir_();
   var col = CAMPOS_ATIV_[campo]; if (!col) throw new Error('Campo inválido.');
-  var sh = aba_('Atividades'), cab = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0], c = cab.indexOf(col) + 1;
   if (campo === 'taxa') valor = valor === '' ? '' : Number(String(valor).replace(',', '.'));
-  sh.getRange(linha, c).setValue(valor);
-  return 'Atividade atualizada.';
+  return trava_(function () {
+    var sh = aba_('Atividades'), cab = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0], c = cab.indexOf(col) + 1;
+    if (!c) throw new Error('Coluna "' + col + '" não encontrada na aba Atividades.');
+    sh.getRange(linha, c).setValue(valor);
+    return 'Atividade atualizada.';
+  });
 }
 function novaAtividade(o) {
   exigir_();
-  var d = dataDe_(o.iso), sh = aba_('Atividades');
-  sh.appendRow([d, DIAS_[d.getDay()], o.tipo || 'Ninhada', o.titulo || 'Atividade', o.local || '', 'Prevista', '', o.taxa === '' ? '' : Number(o.taxa || 0), 'Não', '', 'Falta cadastrar', '', '']);
-  sh.getRange(sh.getLastRow(), 1).setNumberFormat('dd/MM/yyyy');
-  return 'Atividade incluída.';
+  var d = dataDe_(o.iso);
+  return trava_(function () {
+    var sh = aba_('Atividades');
+    sh.appendRow([d, DIAS_[d.getDay()], o.tipo || 'Ninhada', o.titulo || 'Atividade', o.local || '', 'Prevista', '', o.taxa === '' ? '' : Number(o.taxa || 0), 'Não', '', 'Falta cadastrar', '', '']);
+    sh.getRange(sh.getLastRow(), 1).setNumberFormat('dd/MM/yyyy');
+    return 'Atividade incluída.';
+  });
 }
 
 /* o: {iso, cod, filhote, descricao, tipo, valor, situacao, forma, atividade, obs} */
 function lancarFinanceiro(o) {
   exigir_();
-  var sh = aba_('Financeiro'), d = o.iso ? dataDe_(o.iso) : new Date();
-  sh.appendRow([d, o.cod || '', o.filhote || '', o.descricao || '', o.tipo, Number(String(o.valor).replace(',', '.')) || 0, o.situacao || 'Pago', o.forma || '', o.atividade || '', o.obs || '']);
-  sh.getRange(sh.getLastRow(), 1).setNumberFormat('dd/MM/yyyy');
-  return 'Lançamento salvo.';
+  var d = o.iso ? dataDe_(o.iso) : new Date();
+  return trava_(function () {
+    var sh = aba_('Financeiro');
+    sh.appendRow([d, o.cod || '', o.filhote || '', o.descricao || '', o.tipo, Number(String(o.valor).replace(',', '.')) || 0, o.situacao || 'Pago', o.forma || '', o.atividade || '', o.obs || '']);
+    sh.getRange(sh.getLastRow(), 1).setNumberFormat('dd/MM/yyyy');
+    return 'Lançamento salvo.';
+  });
 }
 function salvarDocumento(o) {
   exigir_();
-  var sh = aba_('Documentos'), v = sh.getDataRange().getValues();
-  for (var i = 1; i < v.length; i++) if (String(v[i][0]) === String(o.cod) && v[i][2] === o.documento) {
-    sh.getRange(i + 1, 4, 1, 3).setValues([[o.situacao, o.iso ? dataDe_(o.iso) : '', o.link || '']]); return 'Documento atualizado.';
-  }
-  sh.appendRow([o.cod, o.nome, o.documento, o.situacao, o.iso ? dataDe_(o.iso) : '', o.link || '']);
-  return 'Documento incluído.';
+  return trava_(function () {
+    var sh = aba_('Documentos'), v = sh.getDataRange().getValues();
+    for (var i = 1; i < v.length; i++) if (String(v[i][0]) === String(o.cod) && v[i][2] === o.documento) {
+      sh.getRange(i + 1, 4, 1, 3).setValues([[o.situacao, o.iso ? dataDe_(o.iso) : '', o.link || '']]); return 'Documento atualizado.';
+    }
+    sh.appendRow([o.cod, o.nome, o.documento, o.situacao, o.iso ? dataDe_(o.iso) : '', o.link || '']);
+    return 'Documento incluído.';
+  });
 }
 
 

@@ -58,10 +58,15 @@ function metricasNinhada_(fil) {
     var v = sh.getDataRange().getValues(), linha = 0;
     for (var i = 1; i < v.length; i++) if (String(v[i][0]) === mes) { linha = i + 1; break; }
     if (!linha || String(v[linha - 1][2]) !== cods) {
-      var row = [mes, ativos.length, cods, JSON.stringify(nomes), new Date()];
-      if (linha) sh.getRange(linha, 1, 1, row.length).setValues([row]); else sh.appendRow(row);
-      sh.getRange(linha || sh.getLastRow(), 1).setNumberFormat('@');
-      v = sh.getDataRange().getValues();
+      v = trava_(function () {
+        /* relê dentro do bloqueio: se duas pessoas abrirem juntas na virada do mês, não duplica a linha */
+        var w = sh.getDataRange().getValues(), ln = 0;
+        for (var j = 1; j < w.length; j++) if (String(w[j][0]) === mes) { ln = j + 1; break; }
+        var row = [mes, ativos.length, cods, JSON.stringify(nomes), new Date()];
+        if (ln) sh.getRange(ln, 1, 1, row.length).setValues([row]); else sh.appendRow(row);
+        sh.getRange(ln || sh.getLastRow(), 1).setNumberFormat('@');
+        return sh.getDataRange().getValues();
+      });
     }
   } catch (e) { v = v || [[]]; }
   return (v || []).slice(1).filter(function (r) { return r[0]; }).map(function (r) {

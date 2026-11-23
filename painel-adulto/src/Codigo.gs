@@ -46,17 +46,6 @@ function instalarAtualizacao2x_() {
   Logger.log('Gatilhos: ' + ScriptApp.getProjectTriggers().map(function (t) { return t.getHandlerFunction(); }).join(', '));
 }
 
-function pxMapaSecoes_(jar, tk) {
-  var mapa = {}, info = [];
-  pxSecoes_(jar).forEach(function (s) {
-    var r = req_(jar, PAXTU + '/se%C3%A7%C3%A3o/detalhes', { method: 'post', payload: { id: s.id, _token: tk } });
-    var h = r.getContentText().replace(/<svg[\s\S]*?<\/svg>/g, '').replace(/<script[\s\S]*?<\/script>/g, '').replace(/<style[\s\S]*?<\/style>/g, '');
-    var t = ' ' + h.replace(/<[^>]+>/g, ' | ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ') + ' ';
-    var regs = (h.match(/\b\d{5,8}(-\d)?\b/g) || []);
-    info.push({ id: s.id, nome: s.nome, t: t, regs: regs });
-  });
-  return info;
-}
 
 function pxSecoes_(jar) {
   var h = paxtuGet_(jar, '/se%C3%A7%C3%A3o').replace(/<svg[\s\S]*?<\/svg>/g, '');
@@ -653,8 +642,6 @@ function continuarDepois_() { apagarTriggers_('continuarSync_'); ScriptApp.newTr
 
 function apagarTriggers_(fn) { ScriptApp.getProjectTriggers().forEach(function (t) { if (t.getHandlerFunction() === fn) ScriptApp.deleteTrigger(t); }); }
 
-/** Atualização semanal: toda 2ª Feira, entre 3h e 4h. */
-function instalarAtualizacaoSemanal_() { apagarTriggers_('atualizarDoPaxtu'); ScriptApp.newTrigger('atualizarDoPaxtu').timeBased().onWeekDay(ScriptApp.WeekDay.MONDAY).atHour(3).inTimezone('America/Sao_Paulo').create(); }
 
 /* ===== Registro de acessos (1ª vez no dia por pessoa) ===== */
 var ABA_REG_ACESSOS = 'Registro de acessos';

@@ -12,9 +12,11 @@ function iso_(d) { return d instanceof Date ? Utilities.formatDate(d, TZ, 'yyyy-
 function getDados() {
   exigir_();
   var hoje = new Date();
+  var anoRenov = hoje.getFullYear() + 1;
   var fil = linhas_('Filhotes').map(function (f) {
+    var kr = Object.keys(f).filter(function (k) { return /^Renovar/.test(k); })[0];
     return { cod: String(f['Registro escoteiro']), nome: f['Nome'], registro: f['Nº registro'], nasc: dt_(f['Data de nascimento']), idade: f['Idade'],
-      validade: dt_(f['Validade do registro']), situacao: f['Situação'], renovar: f['Renovar 2027'],
+      validade: dt_(f['Validade do registro']), situacao: f['Situação'], renovar: kr ? f[kr] : '',
       resp1: f['Responsável 1'], par1: f['Parentesco 1'], cont1: f['Contato 1'], email1: f['E-mail 1'],
       resp2: f['Responsável 2'], par2: f['Parentesco 2'], cont2: f['Contato 2'], email2: f['E-mail 2'],
       conquistas: { Acolhida: dt_(f['Acolhida']), Paco: dt_(f['Paco']), Tixa: dt_(f['Tixa']), Lipe: dt_(f['Lipe']), Nina: dt_(f['Nina']), 'Caminho Lobinho': dt_(f['Caminho Lobinho']) },
@@ -46,6 +48,6 @@ function getDados() {
   var docs = linhas_('Documentos').map(function (d) {
     return { linha: d._linha, cod: String(d['Registro escoteiro'] || ''), nome: d['Nome'], documento: d['Documento'], situacao: d['Situação'], data: dt_(d['Data']), link: d['Link'] };
   });
-  return { fila: getFila_(), meses: metricasNinhada_(fil), fichasAt: getFichasAtiv_(), banco: getBanco_(), fichas: getFichas_(), cmdca: getCmdca_(), hoje: dtDia_(hoje), filhotes: fil, itens: itens, progressao: prog, atividades: ativ, presenca: pres, financeiro: fin, documentos: docs };
+  return { fila: getFila_(), meses: metricasNinhada_(fil), fichasAt: getFichasAtiv_(), banco: getBanco_(), fichas: getFichas_(), cmdca: getCmdca_(), hoje: dtDia_(hoje), anoRenov: anoRenov, filhotes: fil, itens: itens, progressao: prog, atividades: ativ, presenca: pres, financeiro: fin, documentos: docs };
 }
 
