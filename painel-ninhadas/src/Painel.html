@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--lar:#E74E0F;--ama:#F29100;--tur:#00AA95;--mar:#945B29;--verde:#E74E0F;--verde2:#fde9df;--cinza:#FFF7EE;--borda:#f1dccb;--texto:#3a2a1e;--laranja:#e67e22;--vermelho:#c0392b;--azul:#1f6fb2}
+*{box-sizing:border-box}
+body{margin:0;font-family:Montserrat,Arial,sans-serif;color:var(--texto);background:var(--cinza);font-size:14px}
+header{background:linear-gradient(110deg,var(--lar) 0%,var(--ama) 100%);box-shadow:0 3px 0 var(--tur);color:#fff;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+header .marca{display:flex;align-items:center;gap:12px}
+.lg-grupo{height:56px;width:56px;border-radius:50%;background:#fff;padding:2px}
+.lg-fil{height:56px;background:#fff;border-radius:10px;padding:4px 6px}
+header h1{font-size:20px;margin:0;font-weight:700;letter-spacing:.3px}
+header small{opacity:.85}
+select,input,textarea,button{font-family:inherit;font-size:13px}
+header select{padding:6px 8px;border-radius:6px;border:0}
+nav{display:flex;gap:4px;padding:10px 16px 0;flex-wrap:wrap;background:#fff;border-bottom:1px solid var(--borda)}
+nav button{border:0;background:none;padding:10px 14px;cursor:pointer;font-weight:600;color:#55635b;border-bottom:3px solid transparent}
+nav button.on{color:var(--lar);border-bottom-color:var(--lar)}
+nav button:hover{color:var(--tur)}
+main{padding:16px;max-width:1200px;margin:0 auto}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
+.card{background:#fff;border:1px solid var(--borda);border-top:5px solid var(--lar);border-radius:12px;padding:14px}
+.card:nth-child(4n+2){border-top-color:var(--ama)}.card:nth-child(4n+3){border-top-color:var(--tur)}.card:nth-child(4n+4){border-top-color:var(--mar)}
+.card:nth-child(4n+2) .n{color:var(--ama)}.card:nth-child(4n+3) .n{color:var(--tur)}.card:nth-child(4n+4) .n{color:var(--mar)}
+.card .n{font-size:26px;font-weight:700;color:var(--verde)}
+.card .l{font-size:12px;color:#66756c}
+.box{background:#fff;border:1px solid var(--borda);border-radius:12px;padding:14px;margin-bottom:16px}
+.box h2{font-size:16px;margin:0 0 10px;color:var(--mar);border-left:5px solid var(--ama);padding-left:8px}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--borda);vertical-align:top}
+th{font-size:12px;color:#fff;font-weight:600;background:var(--tur)}
+tr:nth-child(even) td{background:#fffaf4}
+.tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;background:#dff5f1;color:#00806f}
+.tag.amarelo{background:#fff4e0;color:#a35b00}.tag.vermelho{background:#fde8e6;color:var(--vermelho)}.tag.cinza{background:#eceeed;color:#66756c}.tag.azul{background:#e3effa;color:var(--azul)}
+.btn{background:var(--verde);color:#fff;border:0;border-radius:6px;padding:8px 14px;cursor:pointer;font-weight:600}
+.btn.sec{background:#fff;color:var(--verde);border:1px solid var(--verde)}
+.btn:disabled{opacity:.5}
+.linha{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.linha input,.linha select,.linha textarea{padding:7px 8px;border:1px solid var(--borda);border-radius:6px}
+.muted{color:#7a877f;font-size:12px}
+.etapas{display:flex;gap:6px;flex-wrap:wrap}
+.et b{display:flex;align-items:center}
+.et{border:2px solid var(--c,var(--borda));border-radius:10px;padding:6px 8px;min-width:90px;font-size:12px;background:#fff}
+.et b{color:var(--c)}
+.et-Paco{--c:#00AA95}.et-Tixa{--c:#945B29}.et-Lipe{--c:#E74E0F}.et-Nina{--c:#F29100}
+.et b{display:block}
+.bar{height:6px;background:#eceeed;border-radius:3px;margin-top:4px;overflow:hidden}.bar i{display:block;height:100%;background:var(--c,var(--lar))}
+.bloco{border:1px solid var(--borda);border-left:4px solid var(--ama);border-radius:10px;padding:10px;margin-bottom:10px}
+.bloco h3{font-size:13px;margin:0 0 6px}
+.item{display:flex;gap:8px;align-items:flex-start;padding:4px 0;font-size:13px}
+.item input{margin-top:3px}
+#msg{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#24302a;color:#fff;padding:10px 16px;border-radius:8px;display:none;z-index:9}
+.carregando{padding:40px;text-align:center;color:#66756c}
+.chamada td{white-space:nowrap}
+.chamada input[type=text]{width:100%;min-width:160px}
+@media (max-width:700px){th:nth-child(n+5),td:nth-child(n+5){display:none}.chamada th,.chamada td{display:table-cell}}
+.tl{display:flex;flex-wrap:wrap;gap:8px}.tl-i{flex:1;min-width:110px;background:#f6f1ec;border-radius:10px;padding:10px;text-align:center;opacity:.6}.tl-i.ok{background:#fff4e0;opacity:1;border:1px solid var(--ama)}.tl-i b{display:block;font-size:13px;color:var(--mar)}.tl-i span{font-size:12px}.tl-p{width:12px;height:12px;border-radius:50%;background:#ccc;margin:0 auto 6px}.tl-i.ok .tl-p{background:var(--lar)}
+</style>
+</head>
+<body>
+<header>
+  <div class="marca"><div><h1>Painel das Ninhadas</h1><small>Ramo Filhotes · <?!= CONFIG.NOME_GRUPO ?> · <span id="hoje"></span></small></div></div>
+  <div class="marca"><select id="filtro" onchange="render()"><option value="">Todas</option><? Object.keys(CONFIG.SECOES_PAXTU).forEach(function (n) { ?><option><?= n ?></option><? }); ?></select></div>
+</header>
+<nav id="nav"></nav>
+<main id="main"><div class="carregando">Carregando...</div></main>
+<div id="msg"></div>
+<script>
+var D=null, ABA='geral', SEL=null;
+var ABAS=[['geral','Visão geral'],['filhotes','Filhotes'],['ficha','Ficha do Filhote'],['progressao','Progressão'],['presenca','Presença'],['atividades','Atividades'],['financeiro','Financeiro'],['cmdca','Verba CMDCA'],['documentos','Documentos'],['pergunte','Pergunte']];
+var ETAPAS=['Paco','Tixa','Lipe','Nina'];
+function bicho(e,h){return '<img src="https://paxtu100-public-assets.s3.us-east-1.amazonaws.com/new-progression/bloco-'+e.toLowerCase()+'.svg" alt="'+e+'" style="height:'+(h||22)+'px;vertical-align:middle;margin-right:4px">'}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function msg(t){var m=document.getElementById('msg');m.textContent=t;m.style.display='block';clearTimeout(m._t);m._t=setTimeout(function(){m.style.display='none'},3500)}
+function erro(e){msg('Erro: '+(e&&e.message||e))}
+function carregar(){google.script.run.withSuccessHandler(function(d){D=d;document.getElementById('hoje').textContent=d.hoje;render()}).withFailureHandler(erro).getDados()}
+function chama(fn,args,ok){var r=google.script.run.withSuccessHandler(function(t){msg(t);if(ok)ok();carregar()}).withFailureHandler(erro);r[fn].apply(r,args)}
+function fil(){var f=document.getElementById('filtro').value;return D.filhotes.filter(function(x){return!f||x.ninhada===f})}
+function codsFil(){var o={};fil().forEach(function(x){o[x.cod]=1});return o}
+function tagSit(s){var c=/Vencido|sem registro|Sem cadastro/i.test(s)?'vermelho':/Vence neste ano|Sem validade/.test(s)?'amarelo':/Isento|idade mínima/.test(s)?'cinza':'';return '<span class="tag '+c+'">'+esc(s)+'</span>'}
+function money(v){return 'R$ '+Number(v||0).toFixed(2).replace('.',',')}
+function nav(){document.getElementById('nav').innerHTML=ABAS.map(function(a){return '<button class="'+(a[0]===ABA?'on':'')+'" onclick="ABA=\''+a[0]+'\';SEL=null;render()">'+a[1]+'</button>'}).join('')}
+function render(){nav();if(!D)return;var f={geral:vGeral,filhotes:vFilhotes,ficha:vFicha,progressao:vProgressao,presenca:vPresenca,atividades:vAtividades,financeiro:vFinanceiro,cmdca:vCmdca,documentos:vDocumentos,pergunte:vPergunte}[ABA];document.getElementById('main').innerHTML=f();if(ABA==='presenca')montaChamada()}
+
+/* ---- cálculos ---- */
+function presencaDe(cod){var p=0,j=0,f=0;D.presenca.forEach(function(x){if(x.cod!==cod)return;if(x.estado==='Presente')p++;else if(x.estado==='Falta justificada')j++;else if(x.estado==='Falta')f++});
+  return{p:p,j:j,f:f,sem:(p+f)?Math.round(100*p/(p+f)):null,com:(p+f+j)?Math.round(100*p/(p+f+j)):null}}
+function itensFeitos(cod){var o={};D.progressao.forEach(function(x){if(x.cod===cod)o[x.item]=x});return o}
+function blocos(){var b={};D.itens.forEach(function(i){var k=i.codBloco;if(!b[k])b[k]={etapa:i.etapa,bloco:i.bloco,minimo:i.minimo,itens:[]};b[k].itens.push(i)});return Object.keys(b).sort(function(a,c){return a-c}).map(function(k){return b[k]})}
+function etapaResumo(cod){var feitos=itensFeitos(cod),r={};ETAPAS.forEach(function(e){r[e]={ok:0,tot:0}});
+  blocos().forEach(function(b){var n=b.itens.filter(function(i){return feitos[i.cod]}).length;r[b.etapa].tot++;if(b.minimo&&n>=b.minimo)r[b.etapa].ok++});return r}
+function pendencias(){var pag={},out=[];D.financeiro.forEach(function(x){if(x.tipo==='Entrada'&&x.situacao==='Pago'&&x.atividade)pag[x.cod+'|'+x.atividade]=(pag[x.cod+'|'+x.atividade]||0)+x.valor});
+  var nomes={};D.filhotes.forEach(function(x){nomes[x.cod]=x});
+  D.atividades.forEach(function(a){var t=Number(a.taxa)||0;if(!t||a.situacao==='Cancelada')return;
+    D.presenca.forEach(function(p){if(p.data!==a.iso||p.estado!=='Presente')return;var pessoas=1+(p.acomp||0),dev=t*pessoas,pago=pag[p.cod+'|'+a.titulo]||0;if(pago<dev)out.push({cod:p.cod,nome:(nomes[p.cod]||{}).nome||p.cod,atividade:a.titulo+' ('+pessoas+(pessoas>1?' participantes':' participante')+')',data:a.data,valor:dev-pago})})});
+  D.financeiro.forEach(function(x){if(x.tipo==='Cobrança'&&x.situacao==='Pendente')out.push({cod:x.cod,nome:x.filhote,atividade:x.descricao||x.atividade,data:x.data,valor:x.valor})});
+  return out}
+function caixa(){var c=0;D.financeiro.forEach(function(x){if(x.situacao!=='Pago')return;if(x.tipo==='Entrada')c+=x.valor;else if(x.tipo==='Saída')c-=x.valor});return c}
+
+/* ---- visão geral ---- */
+function vGeral(){var F=fil(),cods=codsFil();
+  var renovar=F.filter(function(x){return/^Sim/.test(x.renovar)}).length;
+  var falta=D.progressao.filter(function(x){return cods[x.cod]&&x.paxtu==='Falta lançar'}).length;
+  var prox=D.atividades.filter(function(a){return!a.passada&&a.situacao!=='Sem atividade'&&a.situacao!=='Cancelada'}).slice(0,4);
+  var semPx=D.atividades.filter(function(a){return a.passada&&a.situacao==='Realizada'&&a.paxtu!=='Cadastrada'&&a.paxtu!=='Não se aplica'}).length;
+  var pend=pendencias().filter(function(p){return cods[p.cod]});
+  var tp=0,tt=0;F.forEach(function(x){var p=presencaDe(x.cod);tp+=p.p;tt+=p.p+p.f});
+  var hj=new Date();hj.setHours(0,0,0,0);
+  var semCad=D.atividades.filter(function(a){if(a.passada||!a.iso||a.situacao==='Sem atividade'||a.situacao==='Cancelada'||a.paxtu==='Cadastrada'||a.paxtu==='Não se aplica')return false;var d=(new Date(a.iso+'T00:00:00')-hj)/864e5;return d>=0&&d<=7});
+  var aviso=semCad.length?'<div class="box" style="border-left:5px solid #c0392b;background:#fff4f2"><h2 style="color:#c0392b">Atenção: atividade sem cadastro no Paxtu</h2>'+semCad.map(function(a){return '<p><b>'+esc(a.data)+'</b>: '+esc(a.titulo)+' · <a href="#" onclick="ABA=\'atividades\';abrePx('+a.linha+');return false">cadastrar no Paxtu</a></p>'}).join('')+'<p class="muted">Atividades dos próximos 7 dias que ainda não estão no Paxtu.</p></div>':'';
+  return aviso+'<div class="cards">'+card(F.length,'Filhotes')+card(renovar,'Precisam renovar para 2027')+card(tt?Math.round(100*tp/tt)+'%':'-','Presença média (sem justificadas)')+card(falta,'Itens de progressão falta lançar no Paxtu')+card(semPx,'Atividades realizadas sem cadastro no Paxtu')+card(money(pend.reduce(function(s,p){return s+p.valor},0)),'Pendências das famílias')+'</div>'+
+  vMeses()+'<div class="box"><h2>Próximas atividades</h2>'+(prox.length?'<table><tr><th>Data</th><th>Atividade</th><th>Local</th><th>Taxa</th><th>Autorização</th></tr>'+prox.map(function(a){return '<tr><td>'+esc(a.data)+'</td><td>'+esc(a.titulo)+' '+(a.tipo==='Grupo'?'<span class="tag azul">Grupo</span>':'')+'</td><td>'+esc(a.local)+'</td><td>'+(a.taxa===''?'-':money(a.taxa))+'</td><td>'+esc(a.autorizacao||'Não')+'</td></tr>'}).join('')+'</table>':'<p class="muted">Nenhuma atividade prevista.</p>')+'</div>'}
+function vMeses(){var M=D.meses||[];if(!M.length)return '';var MES=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+  var rows=M.map(function(m,i){var ant=M[i-1],ent=[],sai=[];if(ant){ent=m.cods.filter(function(c){return ant.cods.indexOf(c)<0}).map(function(c){return m.nomes[c]||c});sai=ant.cods.filter(function(c){return m.cods.indexOf(c)<0}).map(function(c){return ant.nomes[c]||c})}
+    else{(D.fichas||[]).forEach(function(f){var e=String(f.entrada||'').match(/(\d{2})\/(\d{2})\/(\d{4})/);if(e&&e[3]+'-'+e[2]===m.mes&&m.cods.indexOf(f.cod)>=0)ent.push(f.nome)})}
+    var p=m.mes.split('-');return '<tr><td><b>'+MES[+p[1]-1]+'/'+p[0]+'</b></td><td>'+m.ativos+'</td><td>'+(ent.length?'<span class="tag">+'+ent.length+'</span> '+esc(ent.join(', ')):'-')+'</td><td>'+(sai.length?'<span class="tag vermelho">-'+sai.length+'</span> '+esc(sai.join(', ')):'-')+'</td></tr>'}).reverse().slice(0,12).join('');
+  return '<div class="box"><h2>Números do mês</h2><table><tr><th>Mês</th><th>Ativos</th><th>Entraram</th><th>Saíram</th></tr>'+rows+'</table><p class="muted">Contado a partir dos Filhotes no Paxtu. O registro começou em '+(function(p){return MES[+p[1]-1]+'/'+p[0]})(M[0].mes.split('-'))+'; quem deixa de constar no Paxtu aparece em Saíram no mês em que saiu.</p></div>'}
+var PERG={q:'',res:null,carregando:false,hist:[]};
+function vPergunte(){var r=PERG.res;
+  return '<div class="box"><h2>Pergunte</h2><p class="muted">Tire dúvidas sobre regras e orientações do Movimento. A resposta usa só os documentos oficiais da pasta "Documentos de consulta" (POR, Estatuto, resoluções do CAN e materiais do Ramo Filhotes) e cita a fonte. Confira sempre no documento antes de decidir algo importante.</p>'+
+  '<textarea id="pgQ" rows="3" style="width:100%" placeholder="Ex.: Qual a idade mínima para entrar no Ramo Filhotes? Quantos adultos precisa ter numa atividade externa?">'+esc(PERG.q)+'</textarea>'+
+  '<div class="linha" style="margin-top:6px"><button class="btn" '+(PERG.carregando?'disabled':'')+' onclick="pergunta()">'+(PERG.carregando?'Consultando os documentos...':'Perguntar')+'</button></div>'+
+  (r?'<div style="background:#fffaf4;border-radius:8px;padding:12px;margin-top:12px;white-space:pre-wrap">'+fmtResp(r.resposta)+'</div>'+
+    (r.fontes&&r.fontes.length?'<p style="margin-top:10px"><b>Trechos consultados</b></p>'+r.fontes.map(function(f){return '<div class="muted">['+f.n+'] '+esc(f.doc)+(f.ref?' · '+esc(f.ref):'')+' · <a href="'+esc(f.arquivo)+'" target="_blank">abrir no Drive</a>'+(f.fonte&&f.fonte!==f.arquivo?' · <a href="'+esc(f.fonte)+'" target="_blank">site oficial</a>':'')+'</div>'}).join(''):''):'')+
+  (PERG.hist.length?'<p style="margin-top:14px"><b>Perguntas desta sessão</b></p>'+PERG.hist.map(function(h,i){return '<div><a href="#" onclick="PERG.q=PERG.hist['+i+'].q;PERG.res=PERG.hist['+i+'].r;render();return false">'+esc(h.q)+'</a></div>'}).join(''):'')+'</div>'}
+function fmtResp(t){return esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/^\s*[\*\-] /gm,'• ')}
+function pergunta(){var q=document.getElementById('pgQ').value.trim();if(q.length<5){msg('Escreva a pergunta.');return}PERG.q=q;PERG.carregando=true;PERG.res=null;render();
+  google.script.run.withSuccessHandler(function(r){PERG.carregando=false;PERG.res=r;PERG.hist=[{q:q,r:r}].concat(PERG.hist.filter(function(h){return h.q!==q})).slice(0,8);render()}).withFailureHandler(function(e){PERG.carregando=false;render();erro(e)}).perguntarConsulta(q)}
+function card(n,l){return '<div class="card"><div class="n">'+n+'</div><div class="l">'+l+'</div></div>'}
+
+/* ---- filhotes ---- */
+function vFilhotes(){var F=fil();
+  return '<div class="box"><h2>Filhotes ('+F.length+')</h2><table><tr><th>Nome</th><th>Ninhada</th><th>Registro</th><th>Validade</th><th>Situação</th><th>Renovar 2027</th><th>Idade</th><th>Responsáveis</th></tr>'+
+  F.map(function(x){return '<tr><td><a href="#" onclick="FICHA=\''+x.cod+'\';ABA=\'ficha\';render();return false"><b>'+esc(x.nome)+'</b></a></td><td>'+esc(x.ninhada)+'</td><td>'+esc(x.registro)+'</td><td>'+esc(x.validade)+'</td><td>'+tagSit(x.situacao)+'</td><td>'+esc(x.renovar)+'</td><td>'+esc(x.idade)+'</td><td>'+
+    esc(x.resp1)+(x.par1?' ('+esc(x.par1)+')':'')+'<br><span class="muted">'+esc(x.cont1)+' '+esc(x.email1)+'</span>'+(x.resp2?'<br>'+esc(x.resp2)+(x.par2?' ('+esc(x.par2)+')':'')+'<br><span class="muted">'+esc(x.cont2)+' '+esc(x.email2)+'</span>':'')+'</td></tr>'}).join('')+'</table>'+
+  '<p class="muted">Dados do Paxtu, atualizados em '+esc((F[0]||{}).atualizado||'-')+'. Menores de 5 anos aparecem como Abaixo da idade mínima.</p></div>'+vRenovacao(F)+vFila()}
+var DIAS_SEM=['Domingo','2ª Feira','3ª Feira','4ª Feira','5ª Feira','6ª Feira','Sábado'];
+function dBR(d){return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear()+' ('+DIAS_SEM[d.getDay()]+')'}
+function parseBR(t){var m=String(t||'').match(/(\d{2})\/(\d{2})\/(\d{4})/);return m?new Date(+m[3],+m[2]-1,+m[1]):null}
+function primeiro(n){return String(n||'').trim().split(/\s+/)[0]||''}
+function foneWa(c){var d=String(c||'').replace(/\D/g,'');if(d.length>11&&d.slice(0,2)==='55')d=d.slice(2);return (d.length===10||d.length===11)?'55'+d:''}
+function msgRenov(x,dias,venc){var t='Olá, '+primeiro(x.resp1)+'! Tudo bem?\n\n';
+  t+=dias<0?'O registro escoteiro de *'+primeiro(x.nome)+'* venceu em *'+dBR(venc)+'*.':dias===0?'O registro escoteiro de *'+primeiro(x.nome)+'* vence *hoje*, '+dBR(venc)+'.':'O registro escoteiro de *'+primeiro(x.nome)+'* vence em *'+dBR(venc)+'*, daqui a '+dias+' dia'+(dias>1?'s':'')+'.';
+  t+='\n\n'+(dias>0?'A renovação é feita direto pelo Paxtu, em *Registro individual*, no menu de navegação.':'Como o registro já venceu, a renovação não é mais feita direto pelo Paxtu: entre em contato com a chefia ou a diretoria do grupo que nós ajudamos.');
+  t+='\n\nO registro em dia garante o seguro de acidentes pessoais e a participação nas atividades.\n\n_Se o registro já foi renovado, pode desconsiderar esta mensagem._\n\n<?!= CONFIG.ASSINATURA_MENSAGENS ?>';return t}
+function vRenovacao(F){var hj=new Date();hj.setHours(0,0,0,0);
+  var L=F.map(function(x){var v=parseBR(x.validade);if(!v)return null;var d=Math.round((v-hj)/864e5);return d<=30?{x:x,v:v,d:d}:null}).filter(Boolean).sort(function(a,b){return a.d-b.d});
+  if(!L.length)return '<div class="box"><h2>Renovação de registro</h2><p class="muted">Nenhum registro vence nos próximos 30 dias.</p></div>';
+  return '<div class="box"><h2>Renovação de registro</h2><p class="muted">Registros vencidos ou que vencem nos próximos 30 dias. O botão abre o WhatsApp do responsável com a mensagem pronta; confira e envie.</p><table><tr><th>Filhote</th><th>Validade</th><th>Situação</th><th>Responsável</th><th></th></tr>'+
+  L.map(function(r){var x=r.x,w=foneWa(x.cont1),w2=foneWa(x.cont2),m=encodeURIComponent(msgRenov(x,r.d,r.v));
+    var st=r.d<0?'<span class="tag vermelho">vencido há '+(-r.d)+' dia(s)</span>':r.d===0?'<span class="tag vermelho">vence hoje</span>':'<span class="tag '+(r.d<=7?'amarelo':'')+'">faltam '+r.d+' dia(s)</span>';
+    return '<tr><td><b>'+esc(x.nome)+'</b></td><td>'+esc(dBR(r.v))+'</td><td>'+st+'</td><td>'+esc(x.resp1||'-')+'<br><span class="muted">'+esc(x.cont1||'')+'</span></td><td>'+
+      (w?'<a class="btn" target="_blank" href="https://wa.me/'+w+'?text='+m+'">Avisar '+esc(primeiro(x.resp1))+'</a>':'<span class="muted">sem celular</span>')+
+      (w2?' <a class="btn sec" target="_blank" href="https://wa.me/'+w2+'?text='+encodeURIComponent(msgRenov({resp1:x.resp2,nome:x.nome},r.d,r.v))+'">Avisar '+esc(primeiro(x.resp2))+'</a>':'')+'</td></tr>'}).join('')+'</table></div>'}
+function idadeEm(nasc,ref){if(!nasc)return null;var n=new Date(nasc+'T00:00:00'),a=ref.getFullYear()-n.getFullYear();if(ref.getMonth()<n.getMonth()||(ref.getMonth()===n.getMonth()&&ref.getDate()<n.getDate()))a--;return a}
+function vFila(){var Q=(D.fila||[]),hj=new Date(),pos=0;
+  var ord=Q.slice().sort(function(a,b){return String(a.inclusao).localeCompare(String(b.inclusao))});
+  var rows=ord.map(function(f){var ag=f.situacao==='Aguardando';if(ag)pos++;var id=idadeEm(f.nasc,hj),c5='';
+    if(f.nasc&&id!==null&&id<5){var d5=new Date(f.nasc+'T00:00:00');d5.setFullYear(d5.getFullYear()+5);c5='<br><span class="muted">completa 5 anos em '+dBR(d5)+'</span>'}
+    var w=foneWa(f.contato);
+    return '<tr style="'+(ag?'':'opacity:.6')+'"><td>'+(ag?'<b>'+pos+'º</b>':'-')+'</td><td><b>'+esc(f.nome)+'</b>'+c5+'</td><td>'+(id===null?'-':id+' anos')+'</td><td>'+esc(f.inclusao?f.inclusao.split('-').reverse().join('/'):'')+'</td><td>'+esc(f.resp||'')+'<br><span class="muted">'+(w?'<a target="_blank" href="https://wa.me/'+w+'">'+esc(f.contato)+'</a>':esc(f.contato))+'</span></td><td><select onchange="chama(\'salvarFila\',['+f.linha+',\'Situação\',this.value])">'+['Aguardando','Chamado','Entrou','Desistiu'].map(function(o){return '<option '+(f.situacao===o?'selected':'')+'>'+o+'</option>'}).join('')+'</select></td><td class="muted">'+esc(f.obs)+'</td></tr>'}).join('');
+  return '<div class="box"><h2>Fila de espera</h2><p class="muted">Crianças interessadas em entrar na Ninhada, na ordem de chegada. A posição conta só quem está Aguardando. Idade mínima: 5 anos.</p>'+
+  '<div class="linha"><input id="fqN" placeholder="Nome da criança"><label class="muted">Nascimento <input type="date" id="fqD"></label><input id="fqR" placeholder="Responsável"><input id="fqC" placeholder="Celular"><input id="fqO" placeholder="Observações"><button class="btn" onclick="incluiFila()">Incluir na fila</button></div>'+
+  (rows?'<table><tr><th>Posição</th><th>Criança</th><th>Idade</th><th>Na fila desde</th><th>Responsável</th><th>Situação</th><th>Observações</th></tr>'+rows+'</table>':'<p class="muted">Ninguém na fila ainda.</p>')+'</div>'}
+function incluiFila(){var g=function(i){return document.getElementById(i).value.trim()};var o={nome:g('fqN'),nasc:g('fqD'),resp:g('fqR'),contato:g('fqC'),obs:g('fqO')};if(!o.nome){msg('Informe o nome da criança.');return}chama('incluirFila',[o])}
+
+/* ---- progressão ---- */
+function vProgressao(){var F=fil();
+  if(SEL){var x=D.filhotes.filter(function(f){return f.cod===SEL})[0];if(x)return progFilhote(x)}
+  var nf=D.progressao.filter(function(p){return p.paxtu==='Falta lançar'}).length;
+  return '<div class="box"><h2>Progressão pessoal</h2><p class="muted">Bloco completo quando atinge o mínimo de atividades. Clique no Filhote para marcar itens e registrar conquistas: tudo vai para o Paxtu.</p>'+pertoConquista(F)+(nf?'<p><button class="btn" onclick="this.disabled=true;this.textContent=\'Lançando...\';chama(\'lancarPendentesPaxtu\',[])">Lançar no Paxtu os '+nf+' itens pendentes</button></p>':'')+'<table><tr><th>Filhote</th><th>Etapas (blocos completos)</th><th>Conquistas</th><th>Falta lançar</th></tr>'+
+  F.map(function(x){var r=etapaResumo(x.cod),fl=D.progressao.filter(function(p){return p.cod===x.cod&&p.paxtu==='Falta lançar'}).length;
+    var cq=Object.keys(x.conquistas).filter(function(k){return x.conquistas[k]}).map(function(k){return '<span class="tag">'+k+' '+esc(x.conquistas[k])+'</span>'}).join(' ')||'<span class="muted">-</span>';
+    return '<tr style="cursor:pointer" onclick="SEL=\''+x.cod+'\';render()"><td><b>'+esc(x.nome)+'</b></td><td><div class="etapas">'+ETAPAS.map(function(e){var q=r[e];return '<div class="et et-'+e+'"><b>'+bicho(e,20)+e+'</b>'+q.ok+'/'+q.tot+'<div class="bar"><i style="width:'+(q.tot?100*q.ok/q.tot:0)+'%"></i></div></div>'}).join('')+'</div></td><td>'+cq+'</td><td>'+(fl?'<span class="tag amarelo">'+fl+'</span>':'-')+'</td></tr>'}).join('')+'</table></div>'}
+function pertoConquista(F){var L=[];F.forEach(function(x){var feitos=itensFeitos(x.cod);
+    for(var k=0;k<ETAPAS.length;k++){var e=ETAPAS[k];if(x.conquistas[e])continue;var falta=0,bl=[];
+      blocos().filter(function(b){return b.etapa===e}).forEach(function(b){var n=b.itens.filter(function(i){return feitos[i.cod]}).length,m=Math.max(0,(b.minimo||0)-n);if(m){falta+=m;bl.push(b.bloco+' ('+m+')')}});
+      L.push({x:x,e:e,falta:falta,bl:bl});break}});
+  L=L.filter(function(r){return r.falta<=6}).sort(function(a,b){return a.falta-b.falta});if(!L.length)return '';
+  return '<div style="background:#fffaf4;border-radius:8px;padding:10px;margin:10px 0"><b>Perto da conquista</b>'+L.map(function(r){return '<div style="margin-top:6px">'+bicho(r.e,18)+'<a href="#" onclick="SEL=\''+r.x.cod+'\';render();return false"><b>'+esc(r.x.nome)+'</b></a>: '+(r.falta?'faltam '+r.falta+' item(ns) para '+r.e+' <span class="muted">('+esc(r.bl.join(', '))+')</span>':'<b style="color:#1e8449">pronto para registrar a conquista '+r.e+'</b>')+'</div>'}).join('')+'</div>'}
+function progFilhote(x){var feitos=itensFeitos(x.cod),hoje=new Date().toISOString().slice(0,10);
+  return '<div class="box"><div class="linha"><button class="btn sec" onclick="SEL=null;render()">Voltar</button><h2 style="margin:0">'+esc(x.nome)+'</h2></div>'+
+  '<div class="linha" style="margin:10px 0"><b>Registrar conquista:</b><select id="cqS">'+['Acolhida','Paco','Tixa','Lipe','Nina','Caminho Lobinho'].map(function(c){return '<option '+(x.conquistas[c]?'disabled':'')+'>'+c+(x.conquistas[c]?' ('+x.conquistas[c]+')':'')+'</option>'}).join('')+'</select><input type="date" id="cqD" value="'+hoje+'"><button class="btn" onclick="lancaCq(\''+x.cod+'\')">Lançar no Paxtu</button></div>'+
+  '<p class="muted">Ao marcar um item, ele vai direto para o Paxtu.</p>'+
+  ETAPAS.map(function(e){return '<h2 class="et-'+e+'" style="color:var(--c);border-left-color:var(--c)">'+bicho(e,34)+e+'</h2>'+blocos().filter(function(b){return b.etapa===e}).map(function(b){var n=b.itens.filter(function(i){return feitos[i.cod]}).length;
+    return '<div class="bloco"><h3>'+esc(b.bloco)+' <span class="tag '+(n>=b.minimo?'':'cinza')+'">'+n+' de '+b.minimo+'</span></h3>'+b.itens.map(function(i){var f=feitos[i.cod];
+      return '<div class="item"><input type="checkbox" '+(f?'checked':'')+' '+(f&&f.paxtu==='Lançado'?'disabled':'')+' onchange="togItem(this,\''+x.cod+'\',\''+i.cod+'\')"><div>'+esc(i.item)+
+      (f?'<br><span class="muted">'+(f.data||'')+' · '+(f.paxtu==='Lançado'?'no Paxtu':'<b style="color:#a35b00">falta lançar no Paxtu</b>'+(f.motivo?' ('+esc(f.motivo)+')':''))+(f.obs?' · '+esc(f.obs):'')+'</span> <a href="#" onclick="obsItem(\''+x.cod+'\',\''+i.cod+'\');return false">observação</a>':'')+'</div></div>'}).join('')+'</div>'}).join('')}).join('')+'</div>'}
+function togItem(el,cod,item){var x=D.filhotes.filter(function(f){return f.cod===cod})[0];
+  if(el.checked){var d=prompt('Data da conquista (dd/mm/aaaa):',new Date().toLocaleDateString('pt-BR'));if(!d){el.checked=false;return}var p=d.split('/');chama('marcarItem',[cod,x.nome,item,p[2]+'-'+('0'+p[1]).slice(-2)+'-'+('0'+p[0]).slice(-2),''])}
+  else chama('desmarcarItem',[cod,item])}
+function lancaCq(cod){var c=document.getElementById('cqS').value,d=document.getElementById('cqD').value;if(!d){msg('Informe a data.');return}if(!confirm('Lançar '+c+' em '+d.split('-').reverse().join('/')+' no Paxtu?'))return;msg('Lançando no Paxtu...');chama('lancarConquista',[cod,c,d])}
+function obsItem(cod,item){var o=prompt('Observação da chefia:');if(o===null)return;var x=D.filhotes.filter(function(f){return f.cod===cod})[0];chama('marcarItem',[cod,x.nome,item,'',o])}
+
+/* ---- presença ---- */
+function vPresenca(){var F=fil();
+  var ats=D.atividades.filter(function(a){return a.passada&&a.situacao!=='Sem atividade'&&a.situacao!=='Cancelada'}).reverse();
+  var opt=ats.map(function(a,i){return '<option value="'+i+'">'+esc(a.data+' · '+a.titulo)+'</option>'}).join('');
+  return '<div class="box"><h2>Fazer chamada</h2><div class="linha"><select id="chAt" onchange="montaChamada()">'+opt+'</select></div><div id="chLista"></div></div>'+
+  '<div class="box"><h2>Resumo por Filhote</h2><table><tr><th>Filhote</th><th>Presenças</th><th>Faltas justificadas</th><th>Faltas</th><th>% sem justificadas</th><th>% contando todas</th></tr>'+
+  F.map(function(x){var p=presencaDe(x.cod);return '<tr><td>'+esc(x.nome)+'</td><td>'+p.p+'</td><td>'+p.j+'</td><td>'+p.f+'</td><td>'+(p.sem==null?'-':p.sem+'%')+'</td><td>'+(p.com==null?'-':p.com+'%')+'</td></tr>'}).join('')+'</table></div>'}
+function atsChamada(){return D.atividades.filter(function(a){return a.passada&&a.situacao!=='Sem atividade'&&a.situacao!=='Cancelada'}).reverse()}
+function montaChamada(){var s=document.getElementById('chAt');if(!s)return;var a=atsChamada()[s.value];if(!a)return;var F=fil(),reg={};
+  D.presenca.forEach(function(p){if(p.data===a.iso)reg[p.cod]=p});
+  document.getElementById('chLista').innerHTML='<table class="chamada"><tr><th>Filhote</th><th>Presente</th><th>Justificada</th><th>Falta</th><th>Familiares junto</th><th>Motivo</th></tr>'+
+  F.map(function(x){var r=reg[x.cod]||{},n='e'+x.cod;function rd(v){return '<td><input type="radio" name="'+n+'" value="'+v+'" '+(r.estado===v?'checked':'')+'></td>'}
+    return '<tr data-cod="'+x.cod+'" data-nome="'+esc(x.nome)+'"><td>'+esc(x.nome)+'</td>'+rd('Presente')+rd('Falta justificada')+rd('Falta')+'<td><input type="number" min="0" class="acomp" style="width:60px" value="'+(r.acomp||0)+'"></td><td><input type="text" value="'+esc(r.motivo||'')+'" placeholder="Motivo da falta justificada"></td></tr>'}).join('')+
+  '</table><div class="linha" style="margin-top:10px"><button class="btn" onclick="salvaChamada()">Salvar chamada</button><button class="btn sec" onclick="todosPresentes()">Marcar todos presentes</button></div>'}
+function todosPresentes(){document.querySelectorAll('.chamada tr[data-cod]').forEach(function(tr){tr.querySelector('input[value=Presente]').checked=true})}
+function salvaChamada(){var a=atsChamada()[document.getElementById('chAt').value],lista=[];
+  document.querySelectorAll('.chamada tr[data-cod]').forEach(function(tr){var c=tr.querySelector('input[type=radio]:checked');lista.push({cod:tr.dataset.cod,nome:tr.dataset.nome,estado:c?c.value:'',motivo:tr.querySelector('input[type=text]').value,acomp:Number(tr.querySelector('.acomp').value)||0})});
+  var faltaMot=lista.filter(function(x){return x.estado==='Falta justificada'&&!x.motivo.trim()});if(faltaMot.length){msg('Informe o motivo das faltas justificadas.');return}
+  [].slice.call(document.querySelectorAll('#chLista button')).forEach(function(b){b.disabled=true});var bs=document.querySelector('#chLista .btn');if(bs)bs.textContent='Salvando... aguarde';msg('Salvando a chamada e enviando os itens ao Paxtu. Pode levar até 1 minuto.');
+  chama('salvarChamada',[a.iso,a.titulo,lista])}
+
+/* ---- atividades ---- */
+var ATIT=null;
+function normT(t){return String(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim()}
+function sugeridosAtiv(a){var f=fichaDe(a.iso)||{},o=normT(f.origem),b=(D.banco||[]).filter(function(b){return (b.data&&b.data===a.iso)||(o&&b.titulo&&o.indexOf(normT(b.titulo))>=0)})[0];
+  if(!b||!b.progressao)return {};var sug={};String(b.progressao).split(';').forEach(function(p){var m=p.split(':'),e=normT(m[0]),nm=normT(m.slice(1).join(':'));if(!nm)return;
+    blocos().forEach(function(bl){var bn=normT(bl.bloco);if((!e||normT(bl.etapa)===e)&&bn&&(bn.indexOf(nm)>=0||nm.indexOf(bn)>=0))sug[bl.itens[0].codBloco]=1})});return sug}
+function marcaSug(){[].slice.call(document.querySelectorAll('.itAt[data-sug]')).forEach(function(c){c.checked=true})}
+function itensAtiv(){var a=D.atividades.filter(function(x){return x.linha===ATIT})[0];if(!a)return '';var sel={};(a.itens||[]).forEach(function(c){sel[c]=1});var sug=sugeridosAtiv(a),nSug=Object.keys(sug).length;
+  return '<div class="box" style="border-left:5px solid var(--lar)"><div class="linha"><button class="btn sec" onclick="ATIT=null;render()">Voltar</button><h2 style="margin:0">Itens de progressão: '+esc(a.titulo)+' ('+esc(a.data)+')</h2></div><p class="muted">Quem estiver Presente na chamada recebe estes itens com a data da atividade, e eles vão direto para o Paxtu.</p>'+
+  (nSug?'<p style="background:#fffaf4;padding:8px;border-radius:8px">A ficha desta atividade indica '+nSug+' bloco(s), marcados como <span class="tag">sugerido pela ficha</span>. <a href="#" onclick="marcaSug();return false">Marcar os itens sugeridos</a> e depois ajuste o que não se aplica.</p>':'')+
+  ETAPAS.map(function(e){return '<h3 class="et-'+e+'" style="color:var(--c)">'+bicho(e,24)+e+'</h3>'+blocos().filter(function(b){return b.etapa===e}).map(function(b){var sg=sug[b.itens[0].codBloco];return '<div class="bloco"'+(sg?' style="border-left:4px solid var(--lar);background:#fffaf4"':'')+'><b>'+esc(b.bloco)+'</b>'+(sg?' <span class="tag">sugerido pela ficha</span>':'')+b.itens.map(function(i){return '<div class="item"><input type="checkbox" class="itAt" value="'+esc(i.cod)+'" '+(sg?'data-sug="1" ':'')+(sel[i.cod]?'checked':'')+'><div>'+esc(i.item)+'</div></div>'}).join('')+'</div>'}).join('')}).join('')+
+  '<p><button class="btn" onclick="salvaItensAt()">Salvar itens da atividade</button></p></div>'}
+function salvaItensAt(){var c=[].slice.call(document.querySelectorAll('.itAt:checked')).map(function(x){return x.value});var l=ATIT;ATIT=null;chama('salvarItensAtividade',[l,c])}
+var CADPX=null,PESPX=null;
+var TIPOS_PX=[['48','Passeio'],['29','Excursão'],['23','Visita'],['44','Atividade de Ramo'],['56','Atividade de Grupo'],['39','Festa'],['55','Gincana'],['51','Oficina'],['64','Acampamento de seção'],['2','Acantonamento'],['6','Atividade de Divulgação'],['11','Atividade Social'],['5','Atividade Comunitária'],['54','Atividade Cultural'],['8','Atividade Ecológica']];
+var TRANSP_PX=[['','-'],['2','Ônibus'],['1','Carro'],['6','A pé'],['9','Metrô'],['3','Trem'],['7','Outros']];
+var SEDE_END=<?!= JSON.stringify(CONFIG.SEDE_ENDERECO) ?>;var ORIG_GRUPO=<?!= JSON.stringify(CONFIG.ORIGEM_FICHAS_GRUPO) ?>;
+function formPx(){var a=D.atividades.filter(function(x){return x.linha===CADPX})[0];if(!a)return '';
+  function inp(id,v,tp,ph){return '<input id="'+id+'" type="'+(tp||'text')+'" value="'+esc(v||'')+'" placeholder="'+(ph||'')+'">'}
+  function selO(id,ops,v){return '<select id="'+id+'">'+ops.map(function(o){return '<option value="'+o[0]+'" '+(o[0]===v?'selected':'')+'>'+o[1]+'</option>'}).join('')+'</select>'}
+  var pes=PESPX?'<div class="linha" style="align-items:flex-start;gap:30px"><div><b>Escotistas</b>'+PESPX.adultos.map(function(x){return '<div class="item"><input type="checkbox" class="pxEsc" value="'+x.id+'" '+(String(x.id)===<?!= JSON.stringify(String(CONFIG.RESPONSAVEL_PAXTU_ID)) ?>?'checked':'')+'><div>'+esc(x.nome)+'</div></div>'}).join('')+'</div><div><b>Jovens</b>'+PESPX.jovens.map(function(x){return '<div class="item"><input type="checkbox" class="pxJov" value="'+x.id+'" checked><div>'+esc(x.nome)+'</div></div>'}).join('')+'</div></div>':'<p class="muted">Carregando escotistas e jovens do Paxtu...</p>';
+  return '<div class="box" style="border-left:5px solid var(--lar)"><div class="linha"><button class="btn sec" onclick="CADPX=null;render()">Voltar</button><h2 style="margin:0">Cadastrar no Paxtu: atividade especial</h2></div><p class="muted">Ninhadas 1 e 2 juntas. Campos com * são obrigatórios no Paxtu.</p>'+
+  '<div class="linha"><label>Nome*<br>'+inp('pxNome',a.titulo)+'</label><label>Tipo*<br>'+selO('pxTipo',TIPOS_PX,'48')+'</label><label>Transporte<br>'+selO('pxTr',TRANSP_PX,'2')+'</label><label>Custo individual<br>'+inp('pxCusto',Number(a.taxa)?String(a.taxa).replace('.',','):'','text','0,00')+'</label></div>'+
+  '<div class="linha"><label>Local da atividade*<br>'+inp('pxLocal',a.local)+'</label></div>'+
+  '<div class="linha"><label>Data de início*<br>'+inp('pxDI',a.iso,'date')+'</label><label>Horário de início*<br>'+inp('pxHI','','time')+'</label><label>Local de saída*<br>'+inp('pxSaida',SEDE_END)+'</label></div>'+
+  '<div class="linha"><label>Data do fim*<br>'+inp('pxDF',a.iso,'date')+'</label><label>Horário de fim*<br>'+inp('pxHF','','time')+'</label><label>Local de chegada*<br>'+inp('pxCheg',SEDE_END)+'</label></div>'+
+  '<div class="linha"><label style="flex:1">Descrição (fica como histórico da atividade no Paxtu)<br><textarea id="pxDesc" rows="14" style="width:100%">'+esc(descPx(a))+'</textarea></label></div><p class="muted"><a href="#" onclick="document.getElementById(\'pxDesc\').value=descPx(D.atividades.filter(function(x){return x.linha===CADPX})[0],true);return false">Refazer a descrição com os horários e dados preenchidos acima</a></p>'+pes+
+  '<p><button class="btn" onclick="enviaPx()">Cadastrar no Paxtu</button></p></div>'}
+function blocosTxt(a){var por={};(a.itens||[]).forEach(function(c){D.itens.forEach(function(i){if(String(i.cod)===String(c)&&por[i.bloco]===undefined)por[i.bloco]=i.etapa})});
+  var b=Object.keys(por).map(function(x){return x.toLowerCase()});if(!b.length)return '';return b.length>1?b.slice(0,-1).join(', ')+' e '+b[b.length-1]:b[0]}
+function descPx(a,form){var f=fichaDe(a.iso)||{},g=function(i){var el=document.getElementById(i);return el&&form?el.value.trim():''};
+  var nome=g('pxNome')||f.atividade||a.titulo,local=g('pxLocal')||f.local||a.local||'',hi=g('pxHI'),hf=g('pxHF'),sa=g('pxSaida')||SEDE_END,ch=g('pxCheg')||SEDE_END;
+  var tr=document.getElementById('pxTr'),trT=form&&tr&&tr.value?tr.options[tr.selectedIndex].text.toLowerCase():'';
+  var t=nome+' da Ninhada do Ramo Filhotes'+(local?', em '+local:'')+', em '+a.data+'.';
+  t+='\n\nSaída: '+sa+(hi?', às '+hi.replace(':','h'):'')+(trT?', de '+trT:'')+'. Retorno: '+ch+(hf?', às '+hf.replace(':','h'):'')+'.';
+  t+='\n\nParticipam as crianças da Ninhada, acompanhadas pelos responsáveis e pela chefia.';
+  var bl=blocosTxt(a);t+='\n\nA atividade tem caráter de integração e convivência, com foco em trabalhar o Viver Juntos'+(bl?': '+bl:'')+'.';
+  if(Number(a.taxa))t+=' Custo por participante: '+money(a.taxa)+'.';
+  return t}
+var RELATO=null;
+function relatoTxt(a){var f=fichaDe(a.iso)||{},pres=D.presenca.filter(function(p){return p.data===a.iso}),np=pres.filter(function(p){return p.estado==='Presente'}).length,fam=pres.reduce(function(s,p){return s+(p.estado==='Presente'?Number(p.acomp)||0:0)},0);
+  var local=f.local||a.local||'',bl=blocosTxt(a);
+  var t=(f.atividade||a.titulo)+' da Ninhada do Ramo Filhotes'+(local?', em '+local:'')+', em '+a.data+'.';
+  t+='\n\n'+(np?'Participaram '+np+' Filhote'+(np>1?'s':'')+(fam?' e '+fam+' familiar'+(fam>1?'es':''):'')+', acompanhados pela chefia.':'Participaram as crianças da Ninhada, seus responsáveis e a chefia. [conferir: a chamada desta atividade não foi salva]');
+  t+='\n\nO grupo saiu de [local de saída] às [00h00], [transporte]. [Descreva a chegada, a permanência e o retorno.]';
+  var pg=[];try{pg=f.programacao?JSON.parse(f.programacao):[]}catch(e){}
+  var at=pg.filter(function(x){return x.a&&!/^rotina|celebra/i.test(x.a)}).map(function(x){return x.a.replace(/\s*[—–]\s*/g,': ').toLowerCase()});
+  if(at.length)t+='\n\nAs crianças participaram de '+(at.length>1?at.slice(0,-1).join(', ')+' e '+at[at.length-1]:at[0])+'.';
+  t+='\n\nA atividade teve caráter de integração e convivência, com foco em trabalhar o Viver Juntos'+(bl?': '+bl:'')+'.';
+  if(Number(a.taxa))t+=' O custo foi de '+money(a.taxa)+' por participante.';
+  return t}
+function vRelato(){var a=D.atividades.filter(function(x){return x.linha===RELATO})[0];if(!a)return '';
+  return '<div class="box" style="border-left:5px solid var(--lar)"><div class="linha"><button class="btn sec" onclick="RELATO=null;render()">Voltar</button><h2 style="margin:0">Relato para o Paxtu: '+esc(a.titulo)+' ('+esc(a.data)+')</h2></div><p class="muted">Complete o que está entre colchetes, ajuste e copie. No Paxtu, abra a atividade e cole no campo "Descreva brevemente a atividade".</p><textarea id="relT" rows="16" style="width:100%">'+esc(relatoTxt(a))+'</textarea><div class="linha"><button class="btn" onclick="var z=document.getElementById(\'relT\');z.select();try{document.execCommand(\'copy\');msg(\'Texto copiado.\')}catch(e){msg(\'Selecione e copie com Ctrl+C.\')}">Copiar</button></div></div>'}
+function abrePx(l){CADPX=l;PESPX=null;render();google.script.run.withSuccessHandler(function(p){PESPX=p;if(CADPX)render()}).withFailureHandler(erro).pessoasAtividadePaxtu()}
+function enviaPx(){var g=function(i){return document.getElementById(i).value};var o={nome:g('pxNome'),tipo:g('pxTipo'),transporte:g('pxTr'),custo:g('pxCusto'),local:g('pxLocal'),dataIni:g('pxDI'),horaIni:g('pxHI'),saida:g('pxSaida'),dataFim:g('pxDF'),horaFim:g('pxHF'),chegada:g('pxCheg'),descricao:g('pxDesc'),responsavel:<?!= JSON.stringify(String(CONFIG.RESPONSAVEL_PAXTU_ID)) ?>,
+  escotistas:[].slice.call(document.querySelectorAll('.pxEsc:checked')).map(function(x){return x.value}),jovens:[].slice.call(document.querySelectorAll('.pxJov:checked')).map(function(x){return x.value})};
+  if(!o.nome||!o.dataIni||!o.horaIni||!o.dataFim||!o.horaFim||!o.local||!o.saida||!o.chegada){msg('Preencha os campos com *.');return}
+  if(!o.escotistas.length||!o.jovens.length){msg('Escolha pelo menos um escotista e um jovem.');return}
+  if(!confirm('Cadastrar "'+o.nome+'" no Paxtu em '+o.dataIni.split('-').reverse().join('/')+', com '+o.jovens.length+' jovens e '+o.escotistas.length+' escotistas?'))return;
+  var l=CADPX;msg('Cadastrando no Paxtu...');CADPX=null;chama('cadastrarAtividadePaxtu',[l,o])}
+var CICLO=null;
+function cicloDe(iso){return iso?iso.slice(0,4)+'-'+(Number(iso.slice(5,7))<=7?1:2):''}
+function vAtividades(){if(RELATO)return vRelato();if(ATIT)return itensAtiv();if(CADPX)return formPx();if(FAT)return vFichaAtiv();
+  var hj=new Date(),cAt=hj.getFullYear()+'-'+(hj.getMonth()<7?1:2),cis={};D.atividades.forEach(function(a){if(a.iso)cis[cicloDe(a.iso)]=1});cis[cAt]=1;
+  if(CICLO===null)CICLO=cAt;var lista=CICLO==='todos'?D.atividades:D.atividades.filter(function(a){return cicloDe(a.iso)===CICLO});
+  var selC='<select onchange="CICLO=this.value;render()">'+Object.keys(cis).sort().map(function(c){return '<option value="'+c+'" '+(c===CICLO?'selected':'')+'>Ciclo '+c.split('-')[1]+' - '+c.split('-')[0]+'</option>'}).join('')+'<option value="todos" '+(CICLO==='todos'?'selected':'')+'>Todos</option></select>';
+  function sel(a,campo,ops){return '<select onchange="chama(\'salvarAtividade\',['+a.linha+',\''+campo+'\',this.value])">'+ops.map(function(o){return '<option '+(a[campo]===o?'selected':'')+'>'+o+'</option>'}).join('')+'</select>'}
+  return '<div class="box"><h2>Nova atividade</h2><div class="linha"><input type="date" id="naD"><input id="naT" placeholder="Título"><input id="naL" placeholder="Local"><select id="naTp"><option>Ninhada</option><option>Grupo</option></select><input id="naX" placeholder="Taxa por participante" style="width:130px"><button class="btn" onclick="novaAtiv()">Incluir</button></div></div>'+
+  '<div class="box"><div class="linha"><h2 style="margin:0">Calendário</h2>'+selC+'<span class="muted">Ciclo 1: janeiro a julho · Ciclo 2: agosto a dezembro</span></div><table><tr><th>Data</th><th>Atividade</th><th>Situação</th><th>Paxtu</th><th>Autorização</th><th>Taxa</th><th>Ficha / itens / relato</th><th>Observações</th></tr>'+
+  lista.map(function(a){return '<tr style="'+(a.situacao==='Sem atividade'?'opacity:.55':'')+'"><td>'+esc(a.data)+'</td><td><b>'+esc(a.titulo)+'</b> '+(a.tipo==='Grupo'?'<span class="tag azul">Grupo</span>':'')+'<br><span class="muted">'+esc(a.local)+(a.ausentes?' · Ausente: '+esc(a.ausentes):'')+'</span></td><td>'+
+    sel(a,'situacao',['Prevista','Realizada','Cancelada','Sem atividade'])+(a.situacao==='Cancelada'?'<br><span class="muted">'+esc(a.motivo)+'</span>':'')+'</td><td>'+sel(a,'paxtu',['','Cadastrada','Falta cadastrar','Não se aplica'])+(a.paxtu!=='Cadastrada'&&a.situacao!=='Cancelada'&&a.situacao!=='Sem atividade'&&!a.passada?'<br><a href="#" onclick="abrePx('+a.linha+');return false">cadastrar no Paxtu</a>':'')+'</td><td>'+sel(a,'autorizacao',['','Sim','Não'])+'</td><td>'+(a.taxa===''?'-':money(a.taxa))+'</td><td><a href="#" onclick="FAT=\''+a.iso+'\';PROGF=null;FBORIG=\'\';render();return false">'+(fichaDe(a.iso)?'<span class="tag">ficha</span>':'<span class="muted">ficha</span>')+'</a><br><a href="#" onclick="ATIT='+a.linha+';render();return false">'+(a.itens&&a.itens.length?'<span class="tag">'+a.itens.length+' item(ns)</span>':'<span class="muted">escolher</span>')+'</a>'+(a.passada&&a.situacao!=='Cancelada'&&a.situacao!=='Sem atividade'?'<br><a href="#" onclick="RELATO='+a.linha+';render();return false">relato</a>':'')+'</td><td class="muted">'+esc(a.obs)+'</td></tr>'}).join('')+'</table></div>'}
+function novaAtiv(){var o={iso:document.getElementById('naD').value,titulo:document.getElementById('naT').value,local:document.getElementById('naL').value,tipo:document.getElementById('naTp').value,taxa:document.getElementById('naX').value};
+  if(!o.iso||!o.titulo){msg('Informe data e título.');return}chama('novaAtividade',[o])}
+
+/* ---- financeiro ---- */
+function vFinanceiro(){var cods=codsFil(),pend=pendencias().filter(function(p){return cods[p.cod]}),F=fil();
+  var opF=F.map(function(x){return '<option value="'+x.cod+'">'+esc(x.nome)+'</option>'}).join('');
+  var opA=D.atividades.filter(function(a){return Number(a.taxa)>0}).map(function(a){return '<option>'+esc(a.titulo)+'</option>'}).join('');
+  var porAt={};D.financeiro.forEach(function(x){if(!x.atividade)return;var a=porAt[x.atividade]=porAt[x.atividade]||{pago:0,pend:0,fam:{}};var k=x.filhote||'(sem nome)';var f=a.fam[k]=a.fam[k]||{pago:0,pend:0,n:0};
+    if(x.tipo==='Entrada'&&x.situacao==='Pago'){a.pago+=x.valor;f.pago+=x.valor;f.n++}else if(x.situacao==='Pendente'){a.pend+=x.valor;f.pend+=x.valor}});
+  var blocoAt=Object.keys(porAt).map(function(t){var a=porAt[t];return '<div class="box"><h2>'+esc(t)+': recebido '+money(a.pago)+(a.pend?' · pendente '+money(a.pend):'')+'</h2><table><tr><th>Família / participante</th><th>Pagamentos</th><th>Pago</th><th>Pendente</th></tr>'+
+    Object.keys(a.fam).sort().map(function(k){var f=a.fam[k];return '<tr><td>'+esc(k)+'</td><td>'+f.n+'</td><td>'+money(f.pago)+'</td><td>'+(f.pend?'<span class="tag vermelho">'+money(f.pend)+'</span>':'-')+'</td></tr>'}).join('')+'</table></div>'}).join('');
+  return '<div class="cards">'+card(money(caixa()),'Caixa da Ninhada')+card(money(pend.reduce(function(s,p){return s+p.valor},0)),'Pendências')+'</div>'+
+  '<div class="box"><h2>Lançar</h2><div class="linha"><input type="date" id="fD"><select id="fT"><option>Entrada</option><option>Saída</option><option>Cobrança</option></select><select id="fF"><option value="">(sem Filhote)</option>'+opF+'</select><select id="fA"><option value="">(sem atividade)</option>'+opA+'</select><input id="fDs" placeholder="Descrição"><input id="fV" placeholder="Valor" style="width:100px"><select id="fFo"><option>PIX</option><option>Dinheiro</option><option>Outro</option></select><button class="btn" onclick="lancaFin()">Salvar</button></div>'+
+  '<p class="muted">Pagamento de taxa de atividade: Entrada, escolha o Filhote e a atividade. A cobrança é calculada sozinha: taxa por participante vezes (Filhote presente + familiares que foram junto, informados na chamada).</p></div>'+
+  '<div class="box"><h2>Pendências por família</h2>'+(pend.length?'<table><tr><th>Filhote</th><th>Atividade</th><th>Data</th><th>Valor</th></tr>'+pend.map(function(p){return '<tr><td>'+esc(p.nome)+'</td><td>'+esc(p.atividade)+'</td><td>'+esc(p.data)+'</td><td>'+money(p.valor)+'</td></tr>'}).join('')+'</table>':'<p class="muted">Nenhuma pendência.</p>')+'</div>'+
+  '<div class="box"><h2>Lançamentos</h2><table><tr><th>Data</th><th>Tipo</th><th>Filhote</th><th>Descrição</th><th>Valor</th><th>Situação</th></tr>'+D.financeiro.slice().reverse().map(function(x){return '<tr><td>'+esc(x.data)+'</td><td>'+esc(x.tipo)+'</td><td>'+esc(x.filhote)+'</td><td>'+esc(x.descricao||x.atividade)+'</td><td>'+money(x.valor)+'</td><td>'+esc(x.situacao)+'</td></tr>'}).join('')+'</table></div>'}
+function lancaFin(){var s=document.getElementById('fF'),o={iso:document.getElementById('fD').value,tipo:document.getElementById('fT').value,cod:s.value,filhote:s.value?s.options[s.selectedIndex].text:'',
+  atividade:document.getElementById('fA').value,descricao:document.getElementById('fDs').value,valor:document.getElementById('fV').value,forma:document.getElementById('fFo').value};
+  o.situacao=o.tipo==='Cobrança'?'Pendente':'Pago';if(!o.valor){msg('Informe o valor.');return}chama('lancarFinanceiro',[o])}
+
+
+
+
+/* ---- ficha de atividade ---- */
+var FAT=null,PROGF=null,BTXT={};
+function fichaDe(iso){return (D.fichasAt||[]).filter(function(f){return f.iso===iso})[0]||null}
+function blocosAtiv(a){var marc={};(a.itens||[]).forEach(function(c){D.itens.forEach(function(i){if(String(i.cod)===String(c))marc[i.codBloco]=1})});return marc}
+function vFichaAtiv(){var a=D.atividades.filter(function(x){return x.iso===FAT})[0];if(!a)return '';var f=fichaDe(FAT)||{};
+  if(PROGF===null){try{PROGF=f.programacao?JSON.parse(f.programacao):[]}catch(e){PROGF=[]}if(!PROGF.length)PROGF=[{t:'10',a:'Rotina Inicial',f:'Hasteamento das bandeiras e acolhida',r:'Chefia'}]}
+  var marc=blocosAtiv(a),tot=PROGF.reduce(function(s,x){return s+(parseInt(x.t)||0)},0);
+  var prog=ETAPAS.map(function(e){return '<tr><td><b>'+bicho(e,20)+e+'</b></td><td>'+blocos().filter(function(b){return b.etapa===e}).map(function(b){return (marc[b.itens[0].codBloco]?'☒ ':'☐ ')+esc(b.bloco)}).join('&nbsp;&nbsp;&nbsp; ')+'</td></tr>'}).join('');
+  var opB=(D.banco||[]).map(function(b){return '<option value="'+b.linha+'">'+(b.origem==='Nacional'?'Nacional · Semana '+esc(b.semana)+' · ':ORIG_GRUPO+(b.data?' · '+esc(String(b.data).split('-').reverse().join('/')):'')+' · ')+esc(String(b.titulo).slice(0,90))+'</option>'}).join('');
+  function ta(id,v,r){return '<textarea id="'+id+'" rows="'+(r||4)+'" style="width:100%">'+esc(v||'')+'</textarea>'}
+  return '<div class="box no-print"><div class="linha"><button class="btn sec" onclick="FAT=null;PROGF=null;render()">Voltar</button><button class="btn" onclick="salvaFicha()">Salvar ficha</button><button class="btn sec" onclick="imprimeFichaAt()">Imprimir</button><button class="btn sec" onclick="textoZap()">Texto para WhatsApp</button>'+(f.arquivo?'<a href="'+esc(f.arquivo)+'" target="_blank">abrir arquivo original</a>':'')+'</div>'+
+  '<div class="linha" style="margin-top:8px"><b>Usar atividade do banco:</b><select id="fbSel"><option value="">(escolher)</option>'+opB+'</select><button class="btn sec" onclick="usaBanco()">Usar na ficha</button></div><div id="fbPrev"></div></div>'+
+  '<div id="zapBox"></div><div id="fichaAtImp"><div class="box"><h2 style="margin:0">FICHA DE ATIVIDADE: RAMO FILHOTES · <?!= CONFIG.NOME_GRUPO ?></h2></div>'+
+  '<div class="box"><h2>Informações gerais</h2><table>'+
+  '<tr><td style="width:170px"><b>Nome da Atividade</b></td><td><input id="faNome" style="width:100%" value="'+esc(f.atividade||a.titulo)+'"></td></tr>'+
+  '<tr><td><b>Data</b></td><td>'+esc(a.data)+'</td></tr>'+
+  '<tr><td><b>Duração</b></td><td><input id="faDur" style="width:100%" value="'+esc(f.duracao||(tot?tot+' minutos':''))+'" placeholder="120 minutos (2 horas)"></td></tr>'+
+  '<tr><td><b>Local</b></td><td><input id="faLocal" style="width:100%" value="'+esc(f.local||a.local)+'"></td></tr>'+
+  '<tr><td><b>Participantes</b></td><td><input id="faPart" style="width:100%" value="'+esc(f.participantes||'Ninhada completa, chefia e famílias')+'"></td></tr></table></div>'+
+  '<div class="box"><h2>Progressão pessoal</h2><table><tr><th>Personagem</th><th>Campos de Experiência / Blocos de Aprendizagem</th></tr>'+prog+'</table><p class="muted no-print">Os blocos marcados vêm dos "Itens de progressão" da atividade (aba Atividades, coluna escolher). Quem estiver Presente na chamada recebe esses itens no Paxtu.</p></div>'+
+  '<div class="box"><h2>Materiais</h2>'+ta('faMat',f.materiais,3)+'</div>'+
+  '<div class="box"><h2>Cuidados de segurança</h2>'+ta('faSeg',f.seguranca,3)+'</div>'+
+  '<div class="box"><h2>Organização / roteiro</h2>'+ta('faRot',f.roteiro,5)+'</div>'+
+  '<div class="box"><h2>Programação geral <span class="muted">('+tot+' min)</span></h2><table><tr><th style="width:70px">Tempo (min)</th><th>Atividade</th><th>Foco pedagógico e progressão</th><th>Responsável</th><th class="no-print"></th></tr>'+
+  PROGF.map(function(x,k){return '<tr><td><input class="pgT" value="'+esc(x.t)+'" style="width:60px"></td><td><input class="pgA" value="'+esc(x.a)+'" style="width:100%"></td><td><input class="pgF" value="'+esc(x.f)+'" style="width:100%"></td><td><input class="pgR" value="'+esc(x.r)+'" style="width:100%"></td><td class="no-print"><a href="#" onclick="pegaProg();PROGF.splice('+k+',1);render();return false">tirar</a></td></tr>'}).join('')+
+  '</table><p class="no-print"><a href="#" onclick="pegaProg();PROGF.push({t:\'\',a:\'\',f:\'\',r:\'\'});render();return false">+ adicionar linha</a></p></div>'+
+  '<div class="box"><h2>Programação descritiva (passo a passo)</h2>'+ta('faPasso',f.passo,12)+'</div></div>'}
+function pegaProg(){var g=function(c){return [].slice.call(document.querySelectorAll('.'+c)).map(function(x){return x.value})};var T=g('pgT'),A=g('pgA'),F=g('pgF'),R=g('pgR');PROGF=T.map(function(t,i){return {t:t,a:A[i],f:F[i],r:R[i]}})}
+function salvaFicha(){pegaProg();var g=function(i){return document.getElementById(i).value};var tot=PROGF.reduce(function(s,x){return s+(parseInt(x.t)||0)},0);
+  var o={iso:FAT,atividade:g('faNome'),duracao:g('faDur')||(tot?tot+' minutos':''),local:g('faLocal'),participantes:g('faPart'),seguranca:g('faSeg'),roteiro:g('faRot'),programacao:JSON.stringify(PROGF.filter(function(x){return x.a||x.t})),passo:g('faPasso'),materiais:g('faMat'),origem:(fichaDe(FAT)||{}).origem||FBORIG||''};
+  chama('salvarFicha',[o])}
+var FBORIG='',BITEM={};
+function usaBanco(){var l=document.getElementById('fbSel').value;if(!l)return;
+  var mostra=function(o){BITEM[l]=o;var pg=[];try{pg=JSON.parse(o['Programação']||'[]')}catch(e){}
+    document.getElementById('fbPrev').innerHTML='<div style="background:#fffaf4;padding:10px;border-radius:8px;margin-top:8px;font-size:13px"><b>'+esc(o['Título'])+'</b><br><span class="muted">'+esc(o['Duração'])+(o['Participantes']?' · '+esc(o['Participantes']):'')+'</span>'+
+    (o['Progressão']?'<p><b>Progressão:</b> '+esc(o['Progressão'])+'</p>':'')+(pg.length?'<p><b>Programação:</b> '+pg.map(function(r){return esc(r.t)+'min '+esc(r.a)}).join(' · ')+'</p>':'')+
+    (o['Materiais']?'<p><b>Materiais:</b> '+esc(String(o['Materiais']).slice(0,300))+'</p>':'')+'</div><div class="linha" style="margin-top:6px"><button class="btn" onclick="colaBanco(\''+l+'\')">Usar esta atividade na ficha</button>'+(o['Arquivo']?'<a href="'+esc(o['Arquivo'])+'" target="_blank">abrir original</a>':'')+'</div>';colaBanco(l)};
+  if(BITEM[l])mostra(BITEM[l]);else{document.getElementById('fbPrev').innerHTML='<p class="muted">Carregando...</p>';google.script.run.withSuccessHandler(mostra).withFailureHandler(erro).bancoItem(l)}}
+function colaBanco(l){var o=BITEM[l];if(!o)return;var set=function(id,v){var el=document.getElementById(id);if(v&&el)el.value=v};
+  set('faDur',o['Duração']);set('faPart',o['Participantes']);set('faSeg',o['Segurança']);set('faRot',o['Roteiro']);set('faMat',o['Materiais']);set('faPasso',o['Passo a passo']);
+  try{var pg=JSON.parse(o['Programação']||'[]');if(pg.length){PROGF=pg}}catch(e){}
+  FBORIG=(o['Origem']==='Nacional'?'Nacional Semana '+o['Semana']:ORIG_GRUPO)+': '+o['Título'];
+  var keep={};['faNome','faDur','faLocal','faPart','faSeg','faRot','faMat','faPasso'].forEach(function(i){var el=document.getElementById(i);if(el)keep[i]=el.value});
+  render();Object.keys(keep).forEach(function(i){var el=document.getElementById(i);if(el)el.value=keep[i]});msg('Atividade do banco aplicada. Ajuste e clique em Salvar ficha.')}
+function textoZap(){pegaProg();var a=D.atividades.filter(function(x){return x.iso===FAT})[0]||{},g=function(i){var el=document.getElementById(i);return el?el.value.trim():''};
+  var at=PROGF.filter(function(x){return x.a&&!/^rotina|celebra/i.test(x.a)}).map(function(x){return '• '+x.a.replace(/\s*[—–-]\s*/g,': ')});
+  var t='*'+(g('faNome')||a.titulo||'')+'*\n\n*Data:* '+(a.data||'')+'\n*Local:* '+(g('faLocal')||a.local||'')+'\n*Horário:* \n*Uniforme:* \n*O que levar:* '+(Number(a.taxa)?'\n*Taxa:* '+money(a.taxa):'')+(at.length?'\n\n*Programação*\n'+at.join('\n'):'')+'\n\nContamos com a presença de todos!';
+  document.getElementById('zapBox').innerHTML='<div class="box no-print"><h2>Texto para WhatsApp</h2><p class="muted">Complete horário, uniforme e o que levar, depois copie.</p><textarea id="zapT" rows="14" style="width:100%">'+esc(t)+'</textarea><div class="linha"><button class="btn" onclick="var z=document.getElementById(\'zapT\');z.select();try{document.execCommand(\'copy\');msg(\'Texto copiado.\')}catch(e){msg(\'Selecione e copie com Ctrl+C.\')}">Copiar</button><button class="btn sec" onclick="document.getElementById(\'zapBox\').innerHTML=\'\'">Fechar</button></div></div>';
+  document.getElementById('zapBox').scrollIntoView({behavior:'smooth'})}
+function imprimeFichaAt(){[].slice.call(document.querySelectorAll('#fichaAtImp input')).forEach(function(i){i.setAttribute('value',i.value)});[].slice.call(document.querySelectorAll('#fichaAtImp textarea')).forEach(function(i){i.textContent=i.value});
+  var w=window.open('','_blank'),h=document.getElementById('fichaAtImp').cloneNode(true);
+  [].slice.call(h.querySelectorAll('input,textarea')).forEach(function(i){var v=i.tagName==='TEXTAREA'?i.textContent:i.getAttribute('value')||'';var s=document.createElement('span');s.style.whiteSpace='pre-wrap';s.textContent=v;i.parentNode.replaceChild(s,i)});
+  [].slice.call(h.querySelectorAll('.no-print')).forEach(function(x){x.remove()});
+  w.document.write('<html><head><title>Ficha de Atividade</title><style>'+document.querySelector('style').innerHTML+'body{background:#fff}.box{box-shadow:none;border:1px solid #eee}</style></head><body>'+h.innerHTML+'</body></html>');w.document.close();setTimeout(function(){w.print()},600)}
+
+/* ---- ficha do Filhote ---- */
+var FICHA=null;
+function semAc(t){return String(t||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/\s+/g,' ').trim()}
+function fichaPx(x){var fs=D.fichas||[];return fs.filter(function(f){return f.cod===x.cod})[0]||fs.filter(function(f){return semAc(f.nome)===semAc(x.nome)})[0]||null}
+function linhaF(r,v,alerta){return '<tr><td style="width:190px"><b>'+r+'</b></td><td>'+(v?(alerta?'<span class="tag vermelho">'+esc(v)+'</span>':esc(v)):'<span class="muted">Nada informado</span>')+'</td></tr>'}
+function vFicha(){var F=fil();if(!FICHA||!F.some(function(x){return x.cod===FICHA}))FICHA=F.length?F[0].cod:null;
+  var sel='<div class="box no-print"><div class="linha"><b>Filhote:</b><select onchange="FICHA=this.value;render()">'+F.map(function(x){return '<option value="'+esc(x.cod)+'" '+(x.cod===FICHA?'selected':'')+'>'+esc(x.nome)+'</option>'}).join('')+'</select><button class="btn sec" onclick="imprimeFicha()">Imprimir ficha</button></div></div>';
+  var x=D.filhotes.filter(function(f){return f.cod===FICHA})[0];if(!x)return sel+'<div class="box">Nenhum Filhote.</div>';
+  var fp=fichaPx(x)||{},r=etapaResumo(x.cod),feitos=itensFeitos(x.cod),p=presencaDe(x.cod);
+  // linha do tempo
+  var tl=[['Entrada no grupo',fp.entrada]].concat(['Acolhida','Paco','Tixa','Lipe','Nina','Caminho Lobinho'].map(function(k){return [k,x.conquistas[k]]}));
+  var tempo='<div class="tl">'+tl.map(function(t){return '<div class="tl-i '+(t[1]?'ok':'')+'"><div class="tl-p"></div><b>'+t[0]+'</b><span>'+(t[1]?esc(t[1]):'ainda não')+'</span></div>'}).join('')+'</div>';
+  // etapa atual e o que falta
+  var bs=blocos(),atual=null;bs.forEach(function(b){var n=b.itens.filter(function(i){return feitos[i.cod]}).length;if(!atual&&!(b.minimo&&n>=b.minimo))atual={b:b,n:n}});
+  var falta=atual?'<p><b>Bloco atual:</b> '+bicho(atual.b.etapa,20)+esc(atual.b.etapa)+' · '+esc(atual.b.bloco)+' ('+atual.n+' de '+atual.b.minimo+')</p><ul>'+atual.b.itens.filter(function(i){return !feitos[i.cod]}).map(function(i){return '<li>'+esc(i.item)+'</li>'}).join('')+'</ul>':'<p>Todos os blocos completos.</p>';
+  var etap='<div class="etapas">'+ETAPAS.map(function(e){var q=r[e];return '<div class="et et-'+e+'"><b>'+bicho(e,20)+e+'</b>'+q.ok+'/'+q.tot+'<div class="bar"><i style="width:'+(q.tot?100*q.ok/q.tot:0)+'%"></i></div></div>'}).join('')+'</div>';
+  // presença
+  var at={};D.atividades.forEach(function(a){at[a.iso]=a});
+  var ps=D.presenca.filter(function(q){return q.cod===x.cod}).sort(function(a,b){return a.data<b.data?1:-1});
+  var pres='<p>Presenças: <b>'+p.p+'</b> · Justificadas: <b>'+p.j+'</b> · Faltas: <b>'+p.f+'</b> · Sem justificadas: <b>'+(p.sem==null?'-':p.sem+'%')+'</b> · Contando todas: <b>'+(p.com==null?'-':p.com+'%')+'</b></p>'+
+    (ps.length?'<table><tr><th>Data</th><th>Atividade</th><th>Situação</th><th>Familiares</th></tr>'+ps.map(function(q){var a=at[q.data]||{};return '<tr><td>'+esc(a.data||q.data)+'</td><td>'+esc(q.atividade||a.titulo)+'</td><td>'+(q.estado==='Presente'?'<span class="tag">Presente</span>':q.estado==='Falta'?'<span class="tag vermelho">Falta</span>':'<span class="tag amarelo">Justificada</span>'+(q.motivo?' <span class="muted">'+esc(q.motivo)+'</span>':''))+'</td><td>'+(q.acomp||'-')+'</td></tr>'}).join('')+'</table>':'<p class="muted">Nenhuma chamada registrada.</p>');
+  // financeiro
+  var pend=pendencias().filter(function(q){return q.cod===x.cod}),pagos=D.financeiro.filter(function(f){return f.cod===x.cod&&f.tipo==='Entrada'&&f.situacao==='Pago'});
+  var fin='<p>Pago: <b>'+money(pagos.reduce(function(s,f){return s+f.valor},0))+'</b> · Pendente: <b>'+money(pend.reduce(function(s,f){return s+f.valor},0))+'</b></p>'+
+    (pend.length?'<ul>'+pend.map(function(q){return '<li><span class="tag vermelho">'+money(q.valor)+'</span> '+esc(q.atividade)+'</li>'}).join('')+'</ul>':'');
+  // documentos
+  var dd={};D.documentos.forEach(function(d){if(d.cod===x.cod)dd[d.documento]=d});
+  var docs=DOCS.map(function(d){var e=dd[d]&&dd[d].situacao==='Entregue';return '<span class="tag '+(e?'':'amarelo')+'">'+d+': '+(e?'Entregue':'Pendente')+'</span>'}).join(' ');
+  // saúde
+  var saude=D.fichas&&D.fichas.length?(fichaPx(x)?'<table>'+linhaF('Alergias',fp.alergias,true)+linhaF('Restrição alimentar',fp.restricao,true)+linhaF('Medicamentos',fp.meds,true)+linhaF('Condições de saúde',fp.condicoes,true)+
+    linhaF('Cuidados no dia a dia',fp.cuidados,false)+linhaF('Acompanhamento médico',fp.acomp,false)+linhaF('Tipo sanguíneo',fp.sangue,false)+linhaF('Plano de saúde',fp.plano,false)+'</table><p class="muted">Ficha médica do Paxtu, atualizada em '+esc(fp.atualizado)+'. Correções são feitas no Paxtu.</p>':'<p class="muted">Este Filhote não está no Paxtu, então não tem ficha médica.</p>'):'<p class="muted">A ficha médica ainda não foi lida do Paxtu.</p>';
+  return sel+'<div id="fichaImp">'+
+  '<div class="box"><div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><div style="flex:1"><h2 style="margin:0">'+esc(x.nome)+'</h2><p class="muted" style="margin:4px 0 0">'+esc(x.ninhada)+' · '+esc(x.idade)+' anos · nascimento '+esc(x.nasc)+'</p></div><div>'+tagSit(x.situacao)+' <span class="muted">validade '+esc(x.validade||'-')+'</span></div></div>'+
+  '<p style="margin:10px 0 0">'+esc(x.resp1)+(x.par1?' ('+esc(x.par1)+')':'')+' · '+esc(x.cont1)+' · '+esc(x.email1)+(x.resp2?'<br>'+esc(x.resp2)+(x.par2?' ('+esc(x.par2)+')':'')+' · '+esc(x.cont2)+' · '+esc(x.email2):'')+'</p></div>'+
+  '<div class="box" style="border-left:5px solid var(--vermelho)"><h2>Saúde e alimentação</h2>'+saude+'</div>'+
+  '<div class="box"><h2>Vida escoteira</h2>'+tempo+'</div>'+
+  '<div class="box"><h2>Progressão</h2>'+etap+falta+'</div>'+
+  '<div class="box"><h2>Presença</h2>'+pres+'</div>'+
+  '<div class="box"><h2>Financeiro da família</h2>'+fin+'</div>'+
+  '<div class="box"><h2>Documentos</h2>'+docs+'</div>'+
+  (x.obs?'<div class="box"><h2>Observações da chefia</h2><p>'+esc(x.obs)+'</p></div>':'')+'</div>'}
+function imprimeFicha(){var w=window.open('','_blank');w.document.write('<html><head><title>Ficha do Filhote</title><style>'+document.querySelector('style').innerHTML+'body{background:#fff}</style></head><body><h3 style="font-family:Montserrat,Arial;color:#E74E0F">Ramo Filhotes · <?!= CONFIG.NOME_GRUPO ?> · Ficha do Filhote · uso exclusivo da chefia</h3>'+document.getElementById('fichaImp').innerHTML+'</body></html>');w.document.close();setTimeout(function(){w.print()},600)}
+
+/* ---- verba CMDCA 2027 ---- */
+var MESES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+var CATS=['Alimentação','Material de Atividade','Combustível','Aluguel de Van ou Ônibus','Outros'];
+var SITNF=['A enviar','Enviada ao financeiro','Paga','Devolvida'];
+var MESCM=null,MESAB={};
+function usadaNF(n){return n.situacao!=='Devolvida'}
+function vCmdca(){var C=D.cmdca;if(!C)return '<div class="box"><h2>Verba CMDCA 2027</h2><p class="muted">As abas da verba ainda não foram criadas na planilha.</p></div>';
+  var hoje=new Date(),mesAt=hoje.getFullYear()===2027?hoje.getMonth()+1:(hoje.getFullYear()<2027?0:12);
+  var notas=C.notas.filter(function(n){return n.iso&&n.iso.slice(0,4)==='2027'});
+  var usado=notas.filter(usadaNF).reduce(function(s,n){return s+n.valor},0);
+  var prevAte=C.plan.filter(function(p){return p.mes<=mesAt}).reduce(function(s,p){return s+p.valor},0);
+  var usadoAte=notas.filter(function(n){return usadaNF(n)&&n.mes<=mesAt}).reduce(function(s,n){return s+n.valor},0);
+  var aEnviar=notas.filter(function(n){return n.situacao==='A enviar'}).length,semLink=notas.filter(function(n){return usadaNF(n)&&!n.link}).length;
+  var porMes=MESES.map(function(m,i){var pl=C.plan.filter(function(p){return p.mes===i+1}),pv=pl.reduce(function(s,p){return s+p.valor},0),
+    us=notas.filter(function(n){return usadaNF(n)&&n.mes===i+1}).reduce(function(s,n){return s+n.valor},0);return {i:i+1,nome:m,prev:pv,usado:us,cobre:(pl[0]||{}).cobre||''}});
+  var porCat=CATS.map(function(c){var pv=C.plan.filter(function(p){return p.categoria===c}).reduce(function(s,p){return s+p.valor},0),us=notas.filter(function(n){return usadaNF(n)&&n.categoria===c}).reduce(function(s,n){return s+n.valor},0);return {c:c,prev:pv,usado:us}}).filter(function(x){return x.prev||x.usado});
+  var opA=D.atividades.filter(function(a){return a.iso&&a.iso.slice(0,4)==='2027'&&a.situacao!=='Sem atividade'}).map(function(a){return '<option>'+esc(a.data.split(' ')[0]+' · '+a.titulo)+'</option>'}).join('');
+  function barra(u,p){var pc=p?Math.min(100,100*u/p):(u?100:0);return '<div class="bar"><i style="width:'+pc+'%;'+(u>p?'background:var(--vermelho)':'')+'"></i></div>'}
+  var mesSel=MESCM||mesAt||1,doMes=notas.filter(function(n){return n.mes===mesSel});
+  return '<div class="cards">'+card(money(C.total),'Verba 2027 para os Filhotes')+card(money(usado),'Usado (notas enviadas)')+card(money(C.total-usado),'Saldo da verba')+card(money(prevAte-usadoAte),mesAt?'Previsto e não usado até '+MESES[mesAt-1]:'Previsto até o mês atual')+'</div>'+
+  (aEnviar||semLink?'<div class="box" style="border-left:5px solid var(--vermelho)"><b>Atenção:</b> '+(aEnviar?aEnviar+' nota(s) ainda não enviadas ao financeiro. ':'')+(semLink?semLink+' nota(s) sem o link do arquivo.':'')+'</div>':'')+
+    '<div class="box"><h2>Planejado x usado por mês</h2><p class="muted">Clique no mês para ver cada categoria.</p><table><tr><th>Mês</th><th>Previsto</th><th>Usado</th><th>Diferença</th></tr>'+
+  porMes.map(function(m){var d=m.prev-m.usado,cor=m.usado>m.prev?'vermelho':(m.i<mesAt&&m.prev&&!m.usado?'amarelo':''),ab=MESAB[m.i];
+    var linha='<tr style="cursor:pointer;'+(m.i===mesAt?'background:#fff4e0':'')+'" onclick="MESAB['+m.i+']=!MESAB['+m.i+'];render()"><td><b>'+(ab?'▾ ':'▸ ')+m.nome+'</b>'+(m.i===mesAt?' <span class="tag">mês atual</span>':'')+'</td><td>'+money(m.prev)+'</td><td>'+money(m.usado)+barra(m.usado,m.prev)+'</td><td>'+(cor?'<span class="tag '+cor+'">'+money(d)+'</span>':money(d))+'</td></tr>';
+    if(!ab)return linha;
+    var cats=CATS.map(function(c){var pv=C.plan.filter(function(p){return p.mes===m.i&&p.categoria===c}).reduce(function(s,p){return s+p.valor},0),
+      ns=notas.filter(function(n){return usadaNF(n)&&n.mes===m.i&&n.categoria===c}),us=ns.reduce(function(s,n){return s+n.valor},0);return {c:c,prev:pv,usado:us,ns:ns}}).filter(function(x){return x.prev||x.usado});
+    var det='<tr><td colspan="4" style="background:#fffaf4;padding:8px 14px 12px 28px">'+(cats.length?'<table><tr><th>Categoria</th><th>Previsto</th><th>Usado</th><th>Restante</th><th>Notas</th></tr>'+cats.map(function(x){var r=x.prev-x.usado;
+      return '<tr><td>'+esc(x.c)+'</td><td>'+money(x.prev)+'</td><td>'+money(x.usado)+'</td><td>'+(r<0?'<span class="tag vermelho">'+money(r)+'</span>':money(r))+'</td><td class="muted">'+(x.ns.length?x.ns.map(function(n){return esc(n.data)+' · '+esc(n.fornecedor||'-')+' · '+money(n.valor)}).join('<br>'):'-')+'</td></tr>'}).join('')+'</table>':'<p class="muted">Nada previsto para este mês.</p>')+
+      (m.cobre?'<p class="muted" style="margin:6px 0 0"><b>Planejado:</b> '+esc(m.cobre)+'</p>':'')+'</td></tr>';
+    return linha+det}).join('')+
+  '<tr><td><b>Total</b></td><td><b>'+money(C.total)+'</b></td><td><b>'+money(usado)+'</b></td><td><b>'+money(C.total-usado)+'</b></td></tr></table><p class="muted">Vermelho: gastou mais que o previsto. Amarelo: mês que já passou sem nenhuma nota.</p></div>'+
+'<div class="box"><h2>Por categoria</h2><table><tr><th>Categoria</th><th>Previsto no ano</th><th>Usado</th><th>Restante</th></tr>'+porCat.map(function(x){return '<tr><td>'+esc(x.c)+'</td><td>'+money(x.prev)+'</td><td>'+money(x.usado)+barra(x.usado,x.prev)+'</td><td>'+(x.usado>x.prev?'<span class="tag vermelho">'+money(x.prev-x.usado)+'</span>':money(x.prev-x.usado))+'</td></tr>'}).join('')+'</table></div>'+
+  '<div class="box"><h2>Lançar nota fiscal</h2><div class="linha"><input type="date" id="nfD"><select id="nfC">'+CATS.map(function(c){return '<option>'+c+'</option>'}).join('')+'</select><select id="nfA"><option value="">(atividade)</option>'+opA+'</select><input id="nfF" placeholder="Fornecedor"><input id="nfN" placeholder="Nº da NF" style="width:100px"><input id="nfV" placeholder="Valor" style="width:100px"><input id="nfL" placeholder="Link do arquivo da NF"><select id="nfS">'+SITNF.slice(0,2).map(function(c){return '<option>'+c+'</option>'}).join('')+'</select><button class="btn" onclick="lancaNF()">Salvar</button></div>'+
+  '<p class="muted">O dinheiro não passa pela Ninhada: a nota vai para o Diretor Financeiro, que faz o pagamento. A nota deve sair em nome do grupo.</p></div>'+
+  '<div class="box"><h2>Notas do mês</h2><div class="linha"><select onchange="MESCM=Number(this.value);render()">'+MESES.map(function(m,i){return '<option value="'+(i+1)+'" '+(i+1===mesSel?'selected':'')+'>'+m+'</option>'}).join('')+'</select><button class="btn sec" onclick="imprimeMes()">Imprimir relatório do mês</button></div>'+
+  '<div id="relMes">'+(doMes.length?'<table><tr><th>Data</th><th>Categoria</th><th>Atividade</th><th>Fornecedor</th><th>NF</th><th>Valor</th><th>Arquivo</th><th>Situação</th></tr>'+doMes.map(function(n){return '<tr><td>'+esc(n.data)+'</td><td>'+esc(n.categoria)+'</td><td>'+esc(n.atividade)+'</td><td>'+esc(n.fornecedor)+'</td><td>'+esc(n.nf)+'</td><td>'+money(n.valor)+'</td><td>'+(n.link?'<a href="'+esc(n.link)+'" target="_blank">abrir</a>':'<a href="#" onclick="linkNF('+n.linha+');return false"><span class="tag vermelho">incluir link</span></a>')+'</td><td><select onchange="chama(\'situacaoNotaCMDCA\',['+n.linha+',this.value])">'+SITNF.map(function(s){return '<option '+(n.situacao===s?'selected':'')+'>'+s+'</option>'}).join('')+'</select></td></tr>'}).join('')+
+  '<tr><td colspan="5"><b>Total do mês</b></td><td><b>'+money(doMes.filter(usadaNF).reduce(function(s,n){return s+n.valor},0))+'</b></td><td colspan="2">Previsto: '+money(porMes[mesSel-1].prev)+'</td></tr></table>':'<p class="muted">Nenhuma nota neste mês.</p>')+'</div></div>'}
+function lancaNF(){var o={iso:document.getElementById('nfD').value,categoria:document.getElementById('nfC').value,atividade:document.getElementById('nfA').value,fornecedor:document.getElementById('nfF').value,
+  nf:document.getElementById('nfN').value,valor:document.getElementById('nfV').value,link:document.getElementById('nfL').value,situacao:document.getElementById('nfS').value};
+  if(!o.iso||!o.valor){msg('Informe a data e o valor da nota.');return}if(o.iso.slice(0,4)!=='2027'){msg('A verba é de 2027: confira a data da nota.');return}chama('lancarNotaCMDCA',[o])}
+function linkNF(l){var u=prompt('Cole o link do arquivo da nota (Drive):');if(u)chama('linkNotaCMDCA',[l,u])}
+function imprimeMes(){var w=window.open('','_blank');w.document.write('<html><head><title>Verba CMDCA 2027'+'</title><style>body{font-family:Montserrat,Arial;font-size:12px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:5px;text-align:left}select{border:0;appearance:none}</style></head><body><h2>Ramo Filhotes · <?!= CONFIG.NOME_GRUPO ?> · Verba CMDCA 2027</h2><h3>'+document.querySelector('#main select').selectedOptions[0].text+'</h3>'+document.getElementById('relMes').innerHTML+'</body></html>');w.document.close();w.print()}
+
+/* ---- documentos ---- */
+var DOCS=['Termo de consentimento','Autorização de imagem','Ficha de saúde','Autorização de atividade'];
+function vDocumentos(){var F=fil(),idx={};D.documentos.forEach(function(d){idx[d.cod+'|'+d.documento]=d});
+  return '<div class="box"><h2>Documentos</h2><p class="muted">Clique na situação para alternar entre Entregue e Pendente.</p><table><tr><th>Filhote</th>'+DOCS.map(function(d){return '<th>'+d+'</th>'}).join('')+'</tr>'+
+  F.map(function(x){return '<tr><td>'+esc(x.nome)+'</td>'+DOCS.map(function(d){var r=idx[x.cod+'|'+d],ok=r&&r.situacao==='Entregue';
+    return '<td><a href="#" onclick="togDoc(\''+x.cod+'\',\''+esc(x.nome).replace(/'/g,'')+'\',\''+d+'\','+(ok?1:0)+');return false"><span class="tag '+(ok?'':'amarelo')+'">'+(ok?'Entregue':'Pendente')+'</span></a>'+(r&&r.data?'<br><span class="muted">'+r.data+'</span>':'')+'</td>'}).join('')+'</tr>'}).join('')+'</table></div>'}
+function togDoc(cod,nome,doc,ok){chama('salvarDocumento',[{cod:cod,nome:nome,documento:doc,situacao:ok?'Pendente':'Entregue',iso:ok?'':new Date().toISOString().slice(0,10)}])}
+
+carregar();nav();
+</script>
+</body>
+</html>
